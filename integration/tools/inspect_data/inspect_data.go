@@ -8,13 +8,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database/backend"
-	"github.com/thetatoken/theta/store/trie"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database/backend"
+	"github.com/scripttoken/script/store/trie"
 )
 
 func handleError(err error) {

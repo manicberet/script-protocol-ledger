@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rlp"
 )
 
 func TestPacketEmptiness(t *testing.T) {

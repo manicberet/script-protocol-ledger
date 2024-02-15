@@ -1,1 +1,1 @@
-A docker container to run a Theta node.
+A docker container to run a Script node.

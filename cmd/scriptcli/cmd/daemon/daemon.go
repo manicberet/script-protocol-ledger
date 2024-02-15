@@ -6,24 +6,24 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/cmd/thetacli/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/rpc"
 )
 
-// startDaemonCmd runs the thetacli daemon
+// startDaemonCmd runs the scriptcli daemon
 // Example:
-//		thetacli daemon start --port=16889
+//		scriptcli daemon start --port=16889
 var startDaemonCmd = &cobra.Command{
 	Use:     "start",
 	Short:   "Run the thatacli daemon",
 	Long:    `Run the thatacli daemon.`,
-	Example: `thetacli daemon start --port=16889`,
+	Example: `scriptcli daemon start --port=16889`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cfgPath := cmd.Flag("config").Value.String()
-		server, err := rpc.NewThetaCliRPCServer(cfgPath, portFlag)
+		server, err := rpc.NewScriptcliRPCServer(cfgPath, portFlag)
 		if err != nil {
-			log.Fatalf("Failed to run the ThetaCli Daemon: %v", err)
+			log.Fatalf("Failed to run the ScriptCli Daemon: %v", err)
 		}
-		daemon := &ThetaCliDaemon{
+		daemon := &ScriptCliDaemon{
 			RPC: server,
 		}
 		daemon.Start(context.Background())
@@ -32,11 +32,11 @@ var startDaemonCmd = &cobra.Command{
 }
 
 func init() {
-	startDaemonCmd.Flags().StringVar(&portFlag, "port", "16889", "Port to run the ThetaCli Daemon")
+	startDaemonCmd.Flags().StringVar(&portFlag, "port", "16889", "Port to run the ScriptCli Daemon")
 }
 
-type ThetaCliDaemon struct {
-	RPC *rpc.ThetaCliRPCServer
+type ScriptCliDaemon struct {
+	RPC *rpc.ScriptcliRPCServer
 
 	// Life cycle
 	wg      *sync.WaitGroup
@@ -46,7 +46,7 @@ type ThetaCliDaemon struct {
 	stopped bool
 }
 
-func (d *ThetaCliDaemon) Start(ctx context.Context) {
+func (d *ScriptCliDaemon) Start(ctx context.Context) {
 	c, cancel := context.WithCancel(ctx)
 	d.ctx = c
 	d.cancel = cancel
@@ -56,11 +56,11 @@ func (d *ThetaCliDaemon) Start(ctx context.Context) {
 	}
 }
 
-func (d *ThetaCliDaemon) Stop() {
+func (d *ScriptCliDaemon) Stop() {
 	d.cancel()
 }
 
-func (d *ThetaCliDaemon) Wait() {
+func (d *ScriptCliDaemon) Wait() {
 	if d.RPC != nil {
 		d.RPC.Wait()
 	}

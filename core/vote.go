@@ -8,10 +8,10 @@ import (
 	"sort"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/rlp"
 )
 
 // Proposal represents a proposal of a new block.

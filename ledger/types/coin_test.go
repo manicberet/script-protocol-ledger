@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/rlp"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -46,16 +46,16 @@ func TestInvalidCoin(t *testing.T) {
 	assert.True(coinsA.IsEqual(ret1), "Sum is correct")
 
 	// Result should be a copy
-	ret1.ThetaWei = big.NewInt(456)
-	assert.True(coinsA.ThetaWei.Cmp(big.NewInt(123)) == 0)
-	assert.True(ret1.ThetaWei.Cmp(big.NewInt(456)) == 0)
+	ret1.SCPTWei = big.NewInt(456)
+	assert.True(coinsA.SCPTWei.Cmp(big.NewInt(123)) == 0)
+	assert.True(ret1.SCPTWei.Cmp(big.NewInt(456)) == 0)
 
 	ret2 := coinsA.Minus(coinsEmpty)
 	assert.True(coinsA.IsEqual(ret2), "Sum is correct")
 	// Result should be a copy
-	ret2.ThetaWei = big.NewInt(456)
-	assert.True(coinsA.ThetaWei.Cmp(big.NewInt(123)) == 0)
-	assert.True(ret2.ThetaWei.Cmp(big.NewInt(456)) == 0)
+	ret2.SCPTWei = big.NewInt(456)
+	assert.True(coinsA.SCPTWei.Cmp(big.NewInt(123)) == 0)
+	assert.True(ret2.SCPTWei.Cmp(big.NewInt(456)) == 0)
 }
 
 func TestcCoinsRLPNil(t *testing.T) {
@@ -68,8 +68,8 @@ func TestcCoinsRLPNil(t *testing.T) {
 	b := &Coins{}
 	rlp.DecodeBytes(rawA, b)
 
-	assert.NotNil(b.ThetaWei)
-	assert.NotNil(b.TFuelWei)
+	assert.NotNil(b.SCPTWei)
+	assert.NotNil(b.SPAYWei)
 
 	c := NewCoins(0, 0)
 	rawC, err := rlp.EncodeToBytes(c)
@@ -133,8 +133,8 @@ func TestNoNilException(t *testing.T) {
 	assert.True(coinsB.IsEqual(coinsB.Negative()))
 
 	coinsD := coinsB.NoNil()
-	assert.Equal(int64(0), coinsD.ThetaWei.Int64())
-	assert.Equal(int64(0), coinsD.TFuelWei.Int64())
+	assert.Equal(int64(0), coinsD.SCPTWei.Int64())
+	assert.Equal(int64(0), coinsD.SPAYWei.Int64())
 }
 
 func TestParseCoinAmount(t *testing.T) {
@@ -193,13 +193,13 @@ func TestJSON(t *testing.T) {
 	require.True(ok)
 
 	c := Coins{
-		ThetaWei: num,
+		SCPTWei: num,
 	}
 	s, err := json.Marshal(c)
 	require.Nil(err)
 
 	var d Coins
 	err = json.Unmarshal(s, &d)
-	assert.Equal(0, num.Cmp(d.ThetaWei))
-	assert.Nil(d.TFuelWei)
+	assert.Equal(0, num.Cmp(d.SCPTWei))
+	assert.Nil(d.SPAYWei)
 }

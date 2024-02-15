@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/ledger/vm"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/ledger/vm"
 )
 
 var _ TxExecutor = (*SmartContractTxExecutor)(nil)
@@ -43,7 +43,7 @@ func (exec *SmartContractTxExecutor) sanityCheck(chainID string, view *st.StoreV
 	// Get input account
 	fromAccount, success := getInput(view, tx.From)
 	if success.IsError() {
-		return result.Error("Failed to get the account (the address has no Theta nor TFuel)")
+		return result.Error("Failed to get the account (the address has no Script nor SPAY)")
 	}
 
 	// Validate input, advanced
@@ -61,7 +61,7 @@ func (exec *SmartContractTxExecutor) sanityCheck(chainID string, view *st.StoreV
 	}
 
 	if !sanityCheckForGasPrice(tx.GasPrice) {
-		return result.Error("Insufficient gas price. Gas price needs to be at least %v TFuelWei", types.MinimumGasPrice).
+		return result.Error("Insufficient gas price. Gas price needs to be at least %v SPAYWei", types.MinimumGasPrice).
 			WithErrorCode(result.CodeInvalidGasPrice)
 	}
 
@@ -79,10 +79,10 @@ func (exec *SmartContractTxExecutor) sanityCheck(chainID string, view *st.StoreV
 			WithErrorCode(result.CodeFeeLimitTooHigh)
 	}
 
-	value := coins.TFuelWei // NoNil() already guarantees value is NOT nil
+	value := coins.SPAYWei // NoNil() already guarantees value is NOT nil
 	minimalBalance := types.Coins{
-		ThetaWei: zero,
-		TFuelWei: feeLimit.Add(feeLimit, value),
+		SCPTWei: zero,
+		SPAYWei: feeLimit.Add(feeLimit, value),
 	}
 	if !fromAccount.Balance.IsGTE(minimalBalance) {
 		logger.Infof(fmt.Sprintf("Source did not have enough balance %v", tx.From.Address.Hex()))
@@ -111,8 +111,8 @@ func (exec *SmartContractTxExecutor) process(chainID string, view *st.StoreView,
 
 	feeAmount := new(big.Int).Mul(tx.GasPrice, new(big.Int).SetUint64(gasUsed))
 	fee := types.Coins{
-		ThetaWei: big.NewInt(int64(0)),
-		TFuelWei: feeAmount,
+		SCPTWei: big.NewInt(int64(0)),
+		SPAYWei: feeAmount,
 	}
 	if !chargeFee(fromAccount, fee) {
 		return common.Hash{}, result.Error("failed to charge transaction fee")

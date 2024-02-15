@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 var (
@@ -20,26 +20,26 @@ func init() {
 }
 
 type Coins struct {
-	ThetaWei *big.Int
-	TFuelWei *big.Int
+	SCPTWei *big.Int
+	SPAYWei *big.Int
 }
 
 type CoinsJSON struct {
-	ThetaWei *common.JSONBig `json:"thetawei"`
-	TFuelWei *common.JSONBig `json:"tfuelwei"`
+	SCPTWei *common.JSONBig `json:"SCPTWei"`
+	SPAYWei *common.JSONBig `json:"SPAYWei"`
 }
 
 func NewCoinsJSON(coin Coins) CoinsJSON {
 	return CoinsJSON{
-		ThetaWei: (*common.JSONBig)(coin.ThetaWei),
-		TFuelWei: (*common.JSONBig)(coin.TFuelWei),
+		SCPTWei: (*common.JSONBig)(coin.SCPTWei),
+		SPAYWei: (*common.JSONBig)(coin.SPAYWei),
 	}
 }
 
 func (c CoinsJSON) Coins() Coins {
 	return Coins{
-		ThetaWei: (*big.Int)(c.ThetaWei),
-		TFuelWei: (*big.Int)(c.TFuelWei),
+		SCPTWei: (*big.Int)(c.SCPTWei),
+		SPAYWei: (*big.Int)(c.SPAYWei),
 	}
 }
 
@@ -57,15 +57,15 @@ func (c *Coins) UnmarshalJSON(data []byte) error {
 }
 
 // NewCoins is a convenient method for creating small amount of coins.
-func NewCoins(theta int64, tfuel int64) Coins {
+func NewCoins(script int64, spay int64) Coins {
 	return Coins{
-		ThetaWei: big.NewInt(theta),
-		TFuelWei: big.NewInt(tfuel),
+		SCPTWei: big.NewInt(script),
+		SPAYWei: big.NewInt(spay),
 	}
 }
 
 func (coins Coins) String() string {
-	return fmt.Sprintf("%v %v, %v %v", coins.ThetaWei, DenomThetaWei, coins.TFuelWei, DenomTFuelWei)
+	return fmt.Sprintf("%v %v, %v %v", coins.SCPTWei, DenomSCPTWei, coins.SPAYWei, DenomSPAYWei)
 }
 
 func (coins Coins) IsValid() bool {
@@ -73,18 +73,18 @@ func (coins Coins) IsValid() bool {
 }
 
 func (coins Coins) NoNil() Coins {
-	theta := coins.ThetaWei
-	if theta == nil {
-		theta = big.NewInt(0)
+	script := coins.SCPTWei
+	if script == nil {
+		script = big.NewInt(0)
 	}
-	tfuel := coins.TFuelWei
-	if tfuel == nil {
-		tfuel = big.NewInt(0)
+	spay := coins.SPAYWei
+	if spay == nil {
+		spay = big.NewInt(0)
 	}
 
 	return Coins{
-		ThetaWei: theta,
-		TFuelWei: tfuel,
+		SCPTWei: script,
+		SPAYWei: spay,
 	}
 }
 
@@ -94,17 +94,17 @@ func (coins Coins) CalculatePercentage(percentage uint) Coins {
 
 	p := big.NewInt(int64(percentage))
 
-	theta := new(big.Int)
-	theta.Mul(c.ThetaWei, p)
-	theta.Div(theta, Hundred)
+	script := new(big.Int)
+	script.Mul(c.SCPTWei, p)
+	script.Div(script, Hundred)
 
-	tfuel := new(big.Int)
-	tfuel.Mul(c.TFuelWei, p)
-	tfuel.Div(tfuel, Hundred)
+	spay := new(big.Int)
+	spay.Mul(c.SPAYWei, p)
+	spay.Div(spay, Hundred)
 
 	return Coins{
-		ThetaWei: theta,
-		TFuelWei: tfuel,
+		SCPTWei: script,
+		SPAYWei: spay,
 	}
 }
 
@@ -113,30 +113,30 @@ func (coinsA Coins) Plus(coinsB Coins) Coins {
 	cA := coinsA.NoNil()
 	cB := coinsB.NoNil()
 
-	theta := new(big.Int)
-	theta.Add(cA.ThetaWei, cB.ThetaWei)
+	script := new(big.Int)
+	script.Add(cA.SCPTWei, cB.SCPTWei)
 
-	tfuel := new(big.Int)
-	tfuel.Add(cA.TFuelWei, cB.TFuelWei)
+	spay := new(big.Int)
+	spay.Add(cA.SPAYWei, cB.SPAYWei)
 
 	return Coins{
-		ThetaWei: theta,
-		TFuelWei: tfuel,
+		SCPTWei: script,
+		SPAYWei: spay,
 	}
 }
 
 func (coins Coins) Negative() Coins {
 	c := coins.NoNil()
 
-	theta := new(big.Int)
-	theta.Neg(c.ThetaWei)
+	script := new(big.Int)
+	script.Neg(c.SCPTWei)
 
-	tfuel := new(big.Int)
-	tfuel.Neg(c.TFuelWei)
+	spay := new(big.Int)
+	spay.Neg(c.SPAYWei)
 
 	return Coins{
-		ThetaWei: theta,
-		TFuelWei: tfuel,
+		SCPTWei: script,
+		SPAYWei: spay,
 	}
 }
 
@@ -151,24 +151,24 @@ func (coinsA Coins) IsGTE(coinsB Coins) bool {
 
 func (coins Coins) IsZero() bool {
 	c := coins.NoNil()
-	return c.ThetaWei.Cmp(Zero) == 0 && c.TFuelWei.Cmp(Zero) == 0
+	return c.SCPTWei.Cmp(Zero) == 0 && c.SPAYWei.Cmp(Zero) == 0
 }
 
 func (coinsA Coins) IsEqual(coinsB Coins) bool {
 	cA := coinsA.NoNil()
 	cB := coinsB.NoNil()
-	return cA.ThetaWei.Cmp(cB.ThetaWei) == 0 && cA.TFuelWei.Cmp(cB.TFuelWei) == 0
+	return cA.SCPTWei.Cmp(cB.SCPTWei) == 0 && cA.SPAYWei.Cmp(cB.SPAYWei) == 0
 }
 
 func (coins Coins) IsPositive() bool {
 	c := coins.NoNil()
-	return (c.ThetaWei.Cmp(Zero) > 0 && c.TFuelWei.Cmp(Zero) >= 0) ||
-		(c.ThetaWei.Cmp(Zero) >= 0 && c.TFuelWei.Cmp(Zero) > 0)
+	return (c.SCPTWei.Cmp(Zero) > 0 && c.SPAYWei.Cmp(Zero) >= 0) ||
+		(c.SCPTWei.Cmp(Zero) >= 0 && c.SPAYWei.Cmp(Zero) > 0)
 }
 
 func (coins Coins) IsNonnegative() bool {
 	c := coins.NoNil()
-	return c.ThetaWei.Cmp(Zero) >= 0 && c.TFuelWei.Cmp(Zero) >= 0
+	return c.SCPTWei.Cmp(Zero) >= 0 && c.SPAYWei.Cmp(Zero) >= 0
 }
 
 // ParseCoinAmount parses a string representation of coin amount.

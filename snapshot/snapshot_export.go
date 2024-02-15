@@ -9,15 +9,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	cns "github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/kvstore"
-	"github.com/thetatoken/theta/store/treestore"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	cns "github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/kvstore"
+	"github.com/scripttoken/script/store/treestore"
 )
 
 func ExportSnapshot(db database.Database, consensus *cns.ConsensusEngine, chain *blockchain.Chain, snapshotDir string, height uint64) (string, error) {
@@ -45,7 +45,7 @@ func ExportSnapshot(db database.Database, consensus *cns.ConsensusEngine, chain 
 	sv := state.NewStoreView(lastFinalizedBlock.Height, lastFinalizedBlock.BlockHeader.StateHash, db)
 
 	currentTime := time.Now().UTC()
-	filename := "theta_snapshot-" + strconv.FormatUint(sv.Height(), 10) + "-" + sv.Hash().String() + "-" + currentTime.Format("2006-01-02")
+	filename := "script_snapshot-" + strconv.FormatUint(sv.Height(), 10) + "-" + sv.Hash().String() + "-" + currentTime.Format("2006-01-02")
 	snapshotPath := path.Join(snapshotDir, filename)
 	file, err := os.Create(snapshotPath)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 type TransferRecord struct {

@@ -9,19 +9,19 @@ import (
 	"sync"
 	"time"
 
-	"github.com/thetatoken/theta/crypto/bls"
+	"github.com/scripttoken/script/crypto/bls"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/dispatcher"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/dispatcher"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store"
 )
 
 var logger = log.WithFields(log.Fields{"prefix": "consensus"})
@@ -476,7 +476,7 @@ func (e *ConsensusEngine) validateBlock(block *core.Block, parent *core.Extended
 
 	// Validate Guardian Votes.
 	// We allow checkpoint blocs to have nil guardian votes.
-	if block.GuardianVotes != nil && block.Height >= common.HeightEnableTheta2 && common.IsCheckPointHeight(block.Height) {
+	if block.GuardianVotes != nil && block.Height >= common.HeightEnableScript2 && common.IsCheckPointHeight(block.Height) {
 		// Voted block must exist.
 		lastCheckpoint, err := e.chain.FindBlock(block.GuardianVotes.Block)
 		if err != nil {
@@ -1111,7 +1111,7 @@ func (e *ConsensusEngine) createProposal() (core.Proposal, error) {
 	block.HCC.Votes = e.chain.FindVotesByHash(block.HCC.BlockHash).UniqueVoter().FilterByValidators(hccValidators)
 
 	// Add guardian votes.
-	if block.Height >= common.HeightEnableTheta2 && common.IsCheckPointHeight(block.Height) {
+	if block.Height >= common.HeightEnableScript2 && common.IsCheckPointHeight(block.Height) {
 		block.GuardianVotes = e.guardian.GetBestVote()
 	}
 

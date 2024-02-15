@@ -1,6 +1,6 @@
 package core
 
-import "github.com/thetatoken/theta/common"
+import "github.com/scripttoken/script/common"
 
 type HardcodeBlockHash struct {
 	Height    uint64

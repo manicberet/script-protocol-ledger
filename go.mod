@@ -1,4 +1,4 @@
-module github.com/thetatoken/theta
+module github.com/scripttoken/script
 
 require (
 	github.com/aerospike/aerospike-client-go v1.36.0
@@ -43,6 +43,8 @@ require (
 	github.com/pkg/profile v1.4.0
 	github.com/prysmaticlabs/prysm v0.0.0-20191018160938-a05dca18c7f7
 	github.com/russross/blackfriday v2.0.0+incompatible // indirect
+	github.com/scripttoken/script/common v0.0.0
+	github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2 v0.0.0
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/smira/go-statsd v1.3.1
@@ -50,8 +52,6 @@ require (
 	github.com/spf13/viper v1.5.0
 	github.com/stretchr/testify v1.4.0
 	github.com/syndtr/goleveldb v1.0.0
-	github.com/thetatoken/theta/common v0.0.0
-	github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2 v0.0.0
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/wedeploy/gosocketio v0.0.7-beta
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
@@ -67,8 +67,8 @@ require (
 	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce
 )
 
-replace github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2 v0.0.0 => ./rpc/lib/rpc-codec/jsonrpc2/
+replace github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2 v0.0.0 => ./rpc/lib/rpc-codec/jsonrpc2/
 
-replace github.com/thetatoken/theta/common v0.0.0 => ./common
+replace github.com/scripttoken/script/common v0.0.0 => ./common
 
 go 1.13

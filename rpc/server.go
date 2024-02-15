@@ -17,21 +17,21 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/dispatcher"
-	"github.com/thetatoken/theta/ledger"
-	"github.com/thetatoken/theta/mempool"
-	"github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/dispatcher"
+	"github.com/scripttoken/script/ledger"
+	"github.com/scripttoken/script/mempool"
+	"github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2"
 	"golang.org/x/net/netutil"
 	"golang.org/x/net/websocket"
 )
 
 var logger *log.Entry
 
-type ThetaRPCService struct {
+type ScriptRPCService struct {
 	mempool    *mempool.Mempool
 	ledger     *ledger.Ledger
 	dispatcher *dispatcher.Dispatcher
@@ -45,9 +45,9 @@ type ThetaRPCService struct {
 	stopped bool
 }
 
-// ThetaRPCServer is an instance of RPC service.
-type ThetaRPCServer struct {
-	*ThetaRPCService
+// ScriptRPCServer is an instance of RPC service.
+type ScriptRPCServer struct {
+	*ScriptRPCService
 
 	server   *http.Server
 	handler  *rpc.Server
@@ -55,11 +55,11 @@ type ThetaRPCServer struct {
 	listener net.Listener
 }
 
-// NewThetaRPCServer creates a new instance of ThetaRPCServer.
-func NewThetaRPCServer(mempool *mempool.Mempool, ledger *ledger.Ledger, dispatcher *dispatcher.Dispatcher,
-	chain *blockchain.Chain, consensus *consensus.ConsensusEngine) *ThetaRPCServer {
-	t := &ThetaRPCServer{
-		ThetaRPCService: &ThetaRPCService{
+// NewScriptRPCServer creates a new instance of ScriptRPCServer.
+func NewScriptRPCServer(mempool *mempool.Mempool, ledger *ledger.Ledger, dispatcher *dispatcher.Dispatcher,
+	chain *blockchain.Chain, consensus *consensus.ConsensusEngine) *ScriptRPCServer {
+	t := &ScriptRPCServer{
+		ScriptRPCService: &ScriptRPCService{
 			wg: &sync.WaitGroup{},
 		},
 	}
@@ -71,7 +71,7 @@ func NewThetaRPCServer(mempool *mempool.Mempool, ledger *ledger.Ledger, dispatch
 	t.consensus = consensus
 
 	s := rpc.NewServer()
-	s.RegisterName("theta", t.ThetaRPCService)
+	s.RegisterName("script", t.ScriptRPCService)
 
 	t.handler = s
 
@@ -92,7 +92,7 @@ func NewThetaRPCServer(mempool *mempool.Mempool, ledger *ledger.Ledger, dispatch
 }
 
 // Start creates the main goroutine.
-func (t *ThetaRPCServer) Start(ctx context.Context) {
+func (t *ScriptRPCServer) Start(ctx context.Context) {
 	c, cancel := context.WithCancel(ctx)
 	t.ctx = c
 	t.cancel = cancel
@@ -104,7 +104,7 @@ func (t *ThetaRPCServer) Start(ctx context.Context) {
 	go t.txCallback()
 }
 
-func (t *ThetaRPCServer) mainLoop() {
+func (t *ScriptRPCServer) mainLoop() {
 	defer t.wg.Done()
 
 	go t.serve()
@@ -114,7 +114,7 @@ func (t *ThetaRPCServer) mainLoop() {
 	t.server.Shutdown(t.ctx)
 }
 
-func (t *ThetaRPCServer) serve() {
+func (t *ScriptRPCServer) serve() {
 	address := viper.GetString(common.CfgRPCAddress)
 	port := viper.GetString(common.CfgRPCPort)
 	l, err := net.Listen("tcp", address+":"+port)
@@ -147,12 +147,12 @@ func corsMiddleware(handler http.Handler) http.Handler {
 }
 
 // Stop notifies all goroutines to stop without blocking.
-func (t *ThetaRPCServer) Stop() {
+func (t *ScriptRPCServer) Stop() {
 	t.cancel()
 }
 
 // Wait blocks until all goroutines stop.
-func (t *ThetaRPCServer) Wait() {
+func (t *ScriptRPCServer) Wait() {
 	t.wg.Wait()
 }
 
@@ -160,7 +160,7 @@ type defaultHTTPHandler struct {
 }
 
 func (dh *defaultHTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Theta Node is up and running!")
+	fmt.Fprintf(w, "Script Node is up and running!")
 }
 
 //

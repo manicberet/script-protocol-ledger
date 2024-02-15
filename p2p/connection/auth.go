@@ -1,4 +1,4 @@
-// Adapted from rlpx for Theta
+// Adapted from rlpx for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -35,11 +35,11 @@ import (
 	"time"
 
 	"github.com/golang/snappy"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/crypto/ecies"
-	"github.com/thetatoken/theta/crypto/secp256k1"
-	"github.com/thetatoken/theta/crypto/sha3"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/crypto/ecies"
+	"github.com/scripttoken/script/crypto/secp256k1"
+	"github.com/scripttoken/script/crypto/sha3"
+	"github.com/scripttoken/script/rlp"
 )
 
 const (

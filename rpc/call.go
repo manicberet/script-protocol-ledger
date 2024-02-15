@@ -4,10 +4,10 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/ledger/vm"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/ledger/vm"
 )
 
 // ------------------------------- CallSmartContract -----------------------------------
@@ -26,7 +26,7 @@ type CallSmartContractResult struct {
 // CallSmartContract calls the smart contract. However, calling a smart contract does NOT modify
 // the globally consensus state. It can be used for dry run, or for retrieving info from smart contracts
 // without actually spending gas.
-func (t *ThetaRPCService) CallSmartContract(args *CallSmartContractArgs, result *CallSmartContractResult) (err error) {
+func (t *ScriptRPCService) CallSmartContract(args *CallSmartContractArgs, result *CallSmartContractResult) (err error) {
 	var ledgerState *state.StoreView
 	ledgerState, err = t.ledger.GetDeliveredSnapshot()
 	if err != nil {

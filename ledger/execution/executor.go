@@ -3,13 +3,13 @@ package execution
 import (
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "ledger"})
@@ -36,6 +36,7 @@ type Executor struct {
 	coinbaseTxExec *CoinbaseTxExecutor
 	// slashTxExec          *SlashTxExecutor
 	sendTxExec           *SendTxExecutor
+	edgeStakeTxExec      *EdgeStakeTxExecutor
 	reserveFundTxExec    *ReserveFundTxExecutor
 	releaseFundTxExec    *ReleaseFundTxExecutor
 	servicePaymentTxExec *ServicePaymentTxExecutor
@@ -58,6 +59,7 @@ func NewExecutor(db database.Database, chain *blockchain.Chain, state *st.Ledger
 		coinbaseTxExec: NewCoinbaseTxExecutor(db, chain, state, consensus, valMgr),
 		// slashTxExec:          NewSlashTxExecutor(consensus, valMgr),
 		sendTxExec:           NewSendTxExecutor(),
+		edgeStakeTxExec:      NewEdgeStakeTxExecutor(),
 		reserveFundTxExec:    NewReserveFundTxExecutor(state),
 		releaseFundTxExec:    NewReleaseFundTxExecutor(state),
 		servicePaymentTxExec: NewServicePaymentTxExecutor(state),
@@ -190,6 +192,8 @@ func (exec *Executor) getTxExecutor(tx types.Tx) TxExecutor {
 	// 	txExecutor = exec.slashTxExec
 	case *types.SendTx:
 		txExecutor = exec.sendTxExec
+	case *types.EdgeStakeTx:
+		txExecutor = exec.edgeStakeTxExec
 	case *types.ReserveFundTx:
 		txExecutor = exec.reserveFundTxExec
 	case *types.ReleaseFundTx:

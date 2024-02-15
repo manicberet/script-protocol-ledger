@@ -9,13 +9,13 @@ SCRIPTPATH=$(dirname "$0")
 
 echo $SCRIPTPATH
 
-if [ "$1" =  "force" ] || [[ "$(docker images -q theta_builder_image 2> /dev/null)" == "" ]]; then
-    docker build -t theta_builder_image $SCRIPTPATH
+if [ "$1" =  "force" ] || [[ "$(docker images -q script_builder_image 2> /dev/null)" == "" ]]; then
+    docker build -t script_builder_image $SCRIPTPATH
 fi
 
 set +e
-docker stop theta_builder
-docker rm theta_builder
+docker stop script_builder
+docker rm script_builder
 set -e
 
-docker run --name theta_builder -it -v "$GOPATH:/go" theta_builder_image
+docker run --name script_builder -it -v "$GOPATH:/go" script_builder_image

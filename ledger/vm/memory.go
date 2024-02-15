@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common/math"
+	"github.com/scripttoken/script/common/math"
 )
 
 // Memory implements a simple memory model for the ethereum virtual machine.

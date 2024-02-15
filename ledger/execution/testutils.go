@@ -9,16 +9,16 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	st "github.com/scripttoken/script/ledger/state"
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	st "github.com/thetatoken/theta/ledger/state"
 
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database/backend"
 )
 
 // --------------- Test Utilities with Mocked Consensus Engine --------------- //
@@ -165,12 +165,32 @@ func (et *execTest) signSendTx(tx *types.SendTx, accsIn ...types.PrivAccount) {
 	types.SignSendTx(et.chainID, tx, accsIn...)
 }
 
+func (et *execTest) signEdgeStakeTx(tx *types.EdgeStakeTx, accsIn ...types.PrivAccount) {
+	types.SignEdgeStakeTx(et.chainID, tx, accsIn...)
+}
+
 func (et *execTest) state() *st.LedgerState {
 	return et.executor.state
 }
 
 // returns the final balance and expected balance for input and output accounts
 func (et *execTest) execSendTx(tx *types.SendTx, screenTx bool) (res result.Result, inGot, inExp, outGot, outExp types.Coins) {
+	initBalIn := et.state().Delivered().GetAccount(et.accIn.Account.Address).Balance
+	initBalOut := et.state().Delivered().GetAccount(et.accOut.Account.Address).Balance
+
+	if screenTx {
+		_, res = et.executor.ScreenTx(tx)
+	} else {
+		_, res = et.executor.ExecuteTx(tx)
+	}
+
+	endBalIn := et.state().Delivered().GetAccount(et.accIn.Account.Address).Balance
+	endBalOut := et.state().Delivered().GetAccount(et.accOut.Account.Address).Balance
+	decrBalInExp := tx.Outputs[0].Coins.Plus(tx.Fee) //expected decrease in balance In
+	return res, endBalIn, initBalIn.Minus(decrBalInExp), endBalOut, initBalOut.Plus(tx.Outputs[0].Coins)
+}
+
+func (et *execTest) execEdgeStakeTx(tx *types.EdgeStakeTx, screenTx bool) (res result.Result, inGot, inExp, outGot, outExp types.Coins) {
 	initBalIn := et.state().Delivered().GetAccount(et.accIn.Account.Address).Balance
 	initBalOut := et.state().Delivered().GetAccount(et.accOut.Account.Address).Balance
 
@@ -209,7 +229,7 @@ func (et *execTest) SetAcc(accs ...types.PrivAccount) {
 }
 
 func getMinimumTxFee() int64 {
-	return int64(types.MinimumTransactionFeeTFuelWei)
+	return int64(types.MinimumTransactionFeeSPAYWei)
 }
 
 func createServicePaymentTx(chainID string, source, target *types.PrivAccount, amount int64, srcSeq, tgtSeq, paymentSeq, reserveSeq int, resourceID string) *types.ServicePaymentTx {
@@ -217,7 +237,7 @@ func createServicePaymentTx(chainID string, source, target *types.PrivAccount, a
 		Fee: types.NewCoins(0, getMinimumTxFee()),
 		Source: types.TxInput{
 			Address:  source.Address,
-			Coins:    types.Coins{TFuelWei: big.NewInt(amount), ThetaWei: big.NewInt(0)},
+			Coins:    types.Coins{SPAYWei: big.NewInt(amount), SCPTWei: big.NewInt(0)},
 			Sequence: uint64(srcSeq),
 		},
 		Target: types.TxInput{
@@ -250,19 +270,19 @@ func setupForServicePayment(ast *assert.Assertions) (et *execTest, resourceID st
 	et = NewExecTest()
 
 	alice = types.MakeAcc("User Alice")
-	aliceInitBalance = types.Coins{TFuelWei: big.NewInt(10000 * getMinimumTxFee()), ThetaWei: big.NewInt(0)}
+	aliceInitBalance = types.Coins{SPAYWei: big.NewInt(10000 * getMinimumTxFee()), SCPTWei: big.NewInt(0)}
 	alice.Balance = aliceInitBalance
 	et.acc2State(alice)
 	log.Infof("Alice's Address: %v", alice.Address.Hex())
 
 	bob = types.MakeAcc("User Bob")
-	bobInitBalance = types.Coins{TFuelWei: big.NewInt(3000 * getMinimumTxFee()), ThetaWei: big.NewInt(0)}
+	bobInitBalance = types.Coins{SPAYWei: big.NewInt(3000 * getMinimumTxFee()), SCPTWei: big.NewInt(0)}
 	bob.Balance = bobInitBalance
 	et.acc2State(bob)
 	log.Infof("Bob's Address: %v", bob.Address.Hex())
 
 	carol = types.MakeAcc("User Carol")
-	carolInitBalance = types.Coins{TFuelWei: big.NewInt(3000 * getMinimumTxFee()), ThetaWei: big.NewInt(0)}
+	carolInitBalance = types.Coins{SPAYWei: big.NewInt(3000 * getMinimumTxFee()), SCPTWei: big.NewInt(0)}
 	carol.Balance = carolInitBalance
 	et.acc2State(carol)
 	log.Infof("Carol's Address: %v", carol.Address.Hex())
@@ -274,10 +294,10 @@ func setupForServicePayment(ast *assert.Assertions) (et *execTest, resourceID st
 		Fee: types.NewCoins(0, getMinimumTxFee()),
 		Source: types.TxInput{
 			Address:  alice.Address,
-			Coins:    types.Coins{TFuelWei: big.NewInt(1000 * getMinimumTxFee()), ThetaWei: big.NewInt(0)},
+			Coins:    types.Coins{SPAYWei: big.NewInt(1000 * getMinimumTxFee()), SCPTWei: big.NewInt(0)},
 			Sequence: 1,
 		},
-		Collateral:  types.Coins{TFuelWei: big.NewInt(1001 * getMinimumTxFee()), ThetaWei: big.NewInt(0)},
+		Collateral:  types.Coins{SPAYWei: big.NewInt(1001 * getMinimumTxFee()), SCPTWei: big.NewInt(0)},
 		ResourceIDs: []string{resourceID},
 		Duration:    1000,
 	}

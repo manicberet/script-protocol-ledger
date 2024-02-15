@@ -4,11 +4,11 @@ import (
 	"encoding/hex"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 // --------------------------------- Execution Utilities -------------------------------------
@@ -263,8 +263,8 @@ func sanityCheckForGasPrice(gasPrice *big.Int) bool {
 
 func sanityCheckForFee(fee types.Coins) bool {
 	fee = fee.NoNil()
-	minimumFee := new(big.Int).SetUint64(types.MinimumTransactionFeeTFuelWei)
-	return fee.ThetaWei.Cmp(types.Zero) == 0 && fee.TFuelWei.Cmp(minimumFee) >= 0
+	minimumFee := new(big.Int).SetUint64(types.MinimumTransactionFeeSPAYWei)
+	return fee.SCPTWei.Cmp(types.Zero) == 0 && fee.SPAYWei.Cmp(minimumFee) >= 0
 }
 
 func chargeFee(account *types.Account, fee types.Coins) bool {

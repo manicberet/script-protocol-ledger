@@ -10,7 +10,7 @@ import (
 	"net/rpc/jsonrpc"
 	"testing"
 
-	"github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2"
+	"github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2"
 )
 
 type client interface {

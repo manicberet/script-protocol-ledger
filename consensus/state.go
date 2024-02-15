@@ -5,10 +5,10 @@ import (
 	"sync"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/store"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/store"
 )
 
 type StateStub struct {

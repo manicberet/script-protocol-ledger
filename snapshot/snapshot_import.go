@@ -11,23 +11,23 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/thetatoken/theta/ledger"
+	"github.com/scripttoken/script/ledger"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/database/backend"
-	"github.com/thetatoken/theta/store/kvstore"
-	"github.com/thetatoken/theta/store/trie"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/database/backend"
+	"github.com/scripttoken/script/store/kvstore"
+	"github.com/scripttoken/script/store/trie"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "snapshot"})
@@ -577,7 +577,7 @@ func loadChainSegment(filePath string, start, end uint64, prevBlock *core.Extend
 }
 
 func getChainBoundary(filename string) (start, end uint64) {
-	filename = filename[len("theta_chain-"):]
+	filename = filename[len("script_chain-"):]
 	idx := strings.Index(filename, "-")
 	startStr := filename[:idx]
 	start, _ = strconv.ParseUint(startStr, 10, 64)

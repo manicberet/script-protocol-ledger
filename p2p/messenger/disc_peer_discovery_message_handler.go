@@ -10,12 +10,12 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/rlp"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/p2p/netutil"
-	pr "github.com/thetatoken/theta/p2p/peer"
-	"github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/p2p/netutil"
+	pr "github.com/scripttoken/script/p2p/peer"
+	"github.com/scripttoken/script/p2p/types"
 )
 
 // PeerDiscoveryMessageType defines the types of peer discovery message

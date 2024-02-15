@@ -73,17 +73,17 @@ enum MessageType {
 	MessageType_SignIdentity = 53 [(wire_in) = true];
 	MessageType_SignedIdentity = 54 [(wire_out) = true];
 	MessageType_GetFeatures = 55 [(wire_in) = true];
-	MessageType_ThetaGetAddress = 56 [(wire_in) = true];
-	MessageType_ThetaAddress = 57 [(wire_out) = true];
-	MessageType_ThetaSignTx = 58 [(wire_in) = true];
-	MessageType_ThetaTxRequest = 59 [(wire_out) = true];
-	MessageType_ThetaTxAck = 60 [(wire_in) = true];
+	MessageType_ScriptGetAddress = 56 [(wire_in) = true];
+	MessageType_ScriptAddress = 57 [(wire_out) = true];
+	MessageType_ScriptSignTx = 58 [(wire_in) = true];
+	MessageType_ScriptTxRequest = 59 [(wire_out) = true];
+	MessageType_ScriptTxAck = 60 [(wire_in) = true];
 	MessageType_GetECDHSessionKey = 61 [(wire_in) = true];
 	MessageType_ECDHSessionKey = 62 [(wire_out) = true];
 	MessageType_SetU2FCounter = 63 [(wire_in) = true];
-	MessageType_ThetaSignMessage = 64 [(wire_in) = true];
-	MessageType_ThetaVerifyMessage = 65 [(wire_in) = true];
-	MessageType_ThetaMessageSignature = 66 [(wire_out) = true];
+	MessageType_ScriptSignMessage = 64 [(wire_in) = true];
+	MessageType_ScriptVerifyMessage = 65 [(wire_in) = true];
+	MessageType_ScriptMessageSignature = 66 [(wire_out) = true];
 	MessageType_DebugLinkDecision = 100 [(wire_debug_in) = true, (wire_tiny) = true];
 	MessageType_DebugLinkGetState = 101 [(wire_debug_in) = true];
 	MessageType_DebugLinkState = 102 [(wire_debug_out) = true];
@@ -320,12 +320,12 @@ message GetAddress {
 }
 
 /**
- * Request: Ask device for Theta address corresponding to address_n path
+ * Request: Ask device for Script address corresponding to address_n path
  * @next PassphraseRequest
- * @next ThetaAddress
+ * @next ScriptAddress
  * @next Failure
  */
-message ThetaGetAddress {
+message ScriptGetAddress {
 	repeated uint32 address_n = 1;			// BIP-32 path to derive the key from master node
 	bool show_display = 2;			// optionally show on display before sending the result
 }
@@ -339,11 +339,11 @@ message Address {
 }
 
 /**
- * Response: Contains an Theta address derived from device private seed
- * @prev ThetaGetAddress
+ * Response: Contains an Script address derived from device private seed
+ * @prev ScriptGetAddress
  */
-message ThetaAddress {
-	bytes address = 2;		// Coin address as an Theta 160 bit hash
+message ScriptAddress {
+	bytes address = 2;		// Coin address as an Script 160 bit hash
 }
 
 /**
@@ -644,10 +644,10 @@ message TxAck {
  * Note: the first at most 1024 bytes of data MUST be transmitted as part of this message.
  * @next PassphraseRequest
  * @next PinMatrixRequest
- * @next ThetaTxRequest
+ * @next ScriptTxRequest
  * @next Failure
  */
-message ThetaSignTx {
+message ScriptSignTx {
 	repeated uint32 address_n = 1;			// BIP-32 path to derive the key from master node
 	bytes nonce = 2;			// <=256 bit unsigned big endian
 	bytes gas_price = 3;			// <=256 bit unsigned big endian (in wei)
@@ -663,10 +663,10 @@ message ThetaSignTx {
  * Response: Device asks for more data from transaction payload, or returns the signature.
  * If data_length is set, device awaits that many more bytes of payload.
  * Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
- * @prev ThetaSignTx
- * @next ThetaTxAck
+ * @prev ScriptSignTx
+ * @next ScriptTxAck
  */
-message ThetaTxRequest {
+message ScriptTxRequest {
 	uint32 data_length = 1;		// Number of bytes being requested (<= 1024)
 	uint32 signature_v = 2;		// Computed signature (recovery parameter, limited to 27 or 28)
 	bytes signature_r = 3;			// Computed signature R component (256 bit)
@@ -675,23 +675,23 @@ message ThetaTxRequest {
 
 /**
  * Request: Transaction payload data.
- * @prev ThetaTxRequest
- * @next ThetaTxRequest
+ * @prev ScriptTxRequest
+ * @next ScriptTxRequest
  */
-message ThetaTxAck {
+message ScriptTxAck {
 	bytes data_chunk = 1;			// Bytes from transaction payload (<= 1024 bytes)
 }
 
 ////////////////////////////////////////
-// Theta: Message signing messages //
+// Script: Message signing messages //
 ////////////////////////////////////////
 
 /**
  * Request: Ask device to sign message
- * @next ThetaMessageSignature
+ * @next ScriptMessageSignature
  * @next Failure
  */
-message ThetaSignMessage {
+message ScriptSignMessage {
 	repeated uint32 address_n = 1;				// BIP-32 path to derive the key from master node
 	bytes message = 2;				// message to be signed
 }
@@ -701,7 +701,7 @@ message ThetaSignMessage {
  * @next Success
  * @next Failure
  */
-message ThetaVerifyMessage {
+message ScriptVerifyMessage {
 	bytes address = 1;				// address to verify
 	bytes signature = 2;				// signature to verify
 	bytes message = 3;				// message to verify
@@ -709,9 +709,9 @@ message ThetaVerifyMessage {
 
 /**
  * Response: Signed message
- * @prev ThetaSignMessage
+ * @prev ScriptSignMessage
  */
-message ThetaMessageSignature {
+message ScriptMessageSignature {
 	bytes address = 1;				// address used to sign the message
 	bytes signature = 2;				// signature of the message
 }

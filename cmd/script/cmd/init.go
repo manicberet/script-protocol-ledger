@@ -6,13 +6,13 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initialize Theta node configuration.",
+	Short: "Initialize Script node configuration.",
 	Long:  ``,
 	Run:   runInit,
 }

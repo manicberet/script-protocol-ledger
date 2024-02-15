@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/wallet"
-	wtypes "github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/wallet"
+	wtypes "github.com/scripttoken/script/wallet/types"
 )
 
 // passwordCmd updates the password for the key corresponding to the given address
@@ -15,10 +15,10 @@ var passwordCmd = &cobra.Command{
 	Use:     "password",
 	Short:   "Change the password for a key",
 	Long:    `Change the password for a key.`,
-	Example: "thetacli key password 1d8E1191E0a97C1aDa4940B79188D3B1f6f5C695",
+	Example: "scriptcli key password 1d8E1191E0a97C1aDa4940B79188D3B1f6f5C695",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			utils.Error("Usage: thetacli key password <address>\n")
+			utils.Error("Usage: scriptcli key password <address>\n")
 		}
 		address := common.HexToAddress(args[0])
 

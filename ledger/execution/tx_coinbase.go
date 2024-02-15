@@ -8,19 +8,19 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database"
 )
 
 var weiMultiplier = big.NewInt(1e18)
-var tfuelRewardPerBlock = big.NewInt(1).Mul(big.NewInt(48), weiMultiplier) // 48 TFUEL per block, corresponds to about 5% *initial* annual inflation rate. The inflation rate naturally approaches 0 as the chain grows.
-var tfuelRewardN = 400                                                     // Reward receiver sampling params
+var spayRewardPerBlock = big.NewInt(1).Mul(big.NewInt(48), weiMultiplier) // 48 SPAY per block, corresponds to about 5% *initial* annual inflation rate. The inflation rate naturally approaches 0 as the chain grows.
+var spayRewardN = 400                                                     // Reward receiver sampling params
 
 var _ TxExecutor = (*CoinbaseTxExecutor)(nil)
 
@@ -94,7 +94,7 @@ func (exec *CoinbaseTxExecutor) sanityCheck(chainID string, view *st.StoreView, 
 	var expectedRewards map[string]types.Coins
 	guardianVotes := exec.consensus.GetLedger().GetCurrentBlock().GuardianVotes
 
-	if tx.BlockHeight < common.HeightEnableTheta2 || guardianVotes == nil {
+	if tx.BlockHeight < common.HeightEnableScript2 || guardianVotes == nil {
 		expectedRewards = CalculateReward(exec.consensus.GetLedger(), view, validatorSet, nil, nil)
 	} else {
 		guradianVoteBlock, err := exec.chain.FindBlock(guardianVotes.Block)
@@ -152,7 +152,7 @@ func CalculateReward(ledger core.Ledger, view *st.StoreView, validatorSet *core.
 	blockHeight := view.Height() + 1 // view points to the parent block
 	if blockHeight < common.HeightEnableValidatorReward {
 		grantValidatorsWithZeroReward(validatorSet, &accountReward)
-	} else if blockHeight < common.HeightEnableTheta2 || guardianVotes == nil || guardianPool == nil {
+	} else if blockHeight < common.HeightEnableScript2 || guardianVotes == nil || guardianPool == nil {
 		grantValidatorReward(ledger, view, validatorSet, &accountReward, blockHeight)
 	} else if blockHeight < common.HeightSampleStakingReward {
 		grantStakerReward(ledger, view, validatorSet, guardianVotes, guardianPool, &accountReward, blockHeight)
@@ -212,7 +212,7 @@ func grantValidatorReward(ledger core.Ledger, view *st.StoreView, validatorSet *
 		}
 	}
 
-	totalReward := big.NewInt(1).Mul(tfuelRewardPerBlock, big.NewInt(common.CheckpointInterval))
+	totalReward := big.NewInt(1).Mul(spayRewardPerBlock, big.NewInt(common.CheckpointInterval))
 
 	// the source of the stake divides the block reward proportional to their stake
 	for stakeSourceAddr, stakeAmountSum := range stakeSourceMap {
@@ -220,8 +220,8 @@ func grantValidatorReward(ledger core.Ledger, view *st.StoreView, validatorSet *
 		rewardAmount := tmp.Div(tmp, totalStake)
 
 		reward := types.Coins{
-			ThetaWei: big.NewInt(0),
-			TFuelWei: rewardAmount,
+			SCPTWei: big.NewInt(0),
+			SPAYWei: rewardAmount,
 		}.NoNil()
 		(*accountReward)[string(stakeSourceAddr[:])] = reward
 
@@ -300,7 +300,7 @@ func grantStakerReward(ledger core.Ledger, view *st.StoreView, validatorSet *cor
 		}
 	}
 
-	totalReward := big.NewInt(1).Mul(tfuelRewardPerBlock, big.NewInt(common.CheckpointInterval))
+	totalReward := big.NewInt(1).Mul(spayRewardPerBlock, big.NewInt(common.CheckpointInterval))
 
 	// if blockHeight < common.HeightSampleStakingReward {
 	// the source of the stake divides the block reward proportional to their stake
@@ -309,8 +309,8 @@ func grantStakerReward(ledger core.Ledger, view *st.StoreView, validatorSet *cor
 		rewardAmount := tmp.Div(tmp, totalStake)
 
 		reward := types.Coins{
-			ThetaWei: big.NewInt(0),
-			TFuelWei: rewardAmount,
+			SCPTWei: big.NewInt(0),
+			SPAYWei: rewardAmount,
 		}.NoNil()
 		(*accountReward)[string(stakeSourceAddr[:])] = reward
 
@@ -389,10 +389,10 @@ func grantStakerRewardRandomized(ledger core.Ledger, view *st.StoreView, validat
 		}
 	}
 
-	totalReward := big.NewInt(1).Mul(tfuelRewardPerBlock, big.NewInt(common.CheckpointInterval))
+	totalReward := big.NewInt(1).Mul(spayRewardPerBlock, big.NewInt(common.CheckpointInterval))
 
-	samples := make([]*big.Int, tfuelRewardN)
-	for i := 0; i < tfuelRewardN; i++ {
+	samples := make([]*big.Int, spayRewardN)
+	for i := 0; i < spayRewardN; i++ {
 		// Set random seed to (block_height||sampling_index||checkpoint_hash)
 		seed := make([]byte, 2*binary.MaxVarintLen64+common.HashLength)
 		binary.PutUvarint(seed[:], view.Height())
@@ -416,14 +416,14 @@ func grantStakerRewardRandomized(ledger core.Ledger, view *st.StoreView, validat
 		stakeSourceAddr := stakeSourceList[i]
 		stakeAmountSum := stakeSourceMap[stakeSourceAddr]
 
-		if curr >= tfuelRewardN {
+		if curr >= spayRewardN {
 			break
 		}
 
 		count := 0
 		lower := currSum
 		upper := new(big.Int).Add(currSum, stakeAmountSum)
-		for curr < tfuelRewardN && samples[curr].Cmp(lower) >= 0 && samples[curr].Cmp(upper) < 0 {
+		for curr < spayRewardN && samples[curr].Cmp(lower) >= 0 && samples[curr].Cmp(upper) < 0 {
 			count++
 			curr++
 		}
@@ -431,11 +431,11 @@ func grantStakerRewardRandomized(ledger core.Ledger, view *st.StoreView, validat
 
 		if count > 0 {
 			tmp := new(big.Int).Mul(totalReward, big.NewInt(int64(count)))
-			rewardAmount := tmp.Div(tmp, big.NewInt(int64(tfuelRewardN)))
+			rewardAmount := tmp.Div(tmp, big.NewInt(int64(spayRewardN)))
 
 			reward := types.Coins{
-				ThetaWei: big.NewInt(0),
-				TFuelWei: rewardAmount,
+				SCPTWei: big.NewInt(0),
+				SPAYWei: rewardAmount,
 			}.NoNil()
 			(*accountReward)[string(stakeSourceAddr[:])] = reward
 

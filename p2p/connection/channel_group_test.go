@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/common"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
 )
 
 func TestDefaultChannelGroupAddChannel(t *testing.T) {

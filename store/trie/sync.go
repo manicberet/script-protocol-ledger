@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/store/database"
 	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 

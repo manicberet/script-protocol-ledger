@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -27,8 +27,8 @@ import (
 	"github.com/karalabe/hid"
 	log "github.com/sirupsen/logrus"
 
-	ks "github.com/thetatoken/theta/wallet/coldwallet/keystore"
-	"github.com/thetatoken/theta/wallet/types"
+	ks "github.com/scripttoken/script/wallet/coldwallet/keystore"
+	"github.com/scripttoken/script/wallet/types"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "wallet"})

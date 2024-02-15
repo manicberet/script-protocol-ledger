@@ -15,25 +15,24 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/node"
-	msg "github.com/thetatoken/theta/p2p/messenger"
-	msgl "github.com/thetatoken/theta/p2pl/messenger"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/snapshot"
-	"github.com/thetatoken/theta/store/database/backend"
-	"github.com/thetatoken/theta/version"
-	ks "github.com/thetatoken/theta/wallet/softwallet/keystore"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/node"
+	msg "github.com/scripttoken/script/p2p/messenger"
+	msgl "github.com/scripttoken/script/p2pl/messenger"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/snapshot"
+	"github.com/scripttoken/script/store/database/backend"
+	ks "github.com/scripttoken/script/wallet/softwallet/keystore"
 )
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "Start Theta node.",
+	Short: "Start Script node.",
 	Run:   runStart,
 }
 
@@ -212,10 +211,10 @@ func loadOrCreateKey() (*crypto.PrivateKey, error) {
 			password = nodePassword
 		} else {
 			fmt.Println("")
-			fmt.Println("You are launching the Theta Node for the first time. Welcome and please follow the instructions to setup the node.")
+			fmt.Println("You are launching the Script Node for the first time. Welcome and please follow the instructions to setup the node.")
 			fmt.Println("")
 
-			firstPrompt := fmt.Sprintf("Please choose your password for the Theta Node: ")
+			firstPrompt := fmt.Sprintf("Please choose your password for the Script Node: ")
 			firstPassword, err := utils.GetPassword(firstPrompt)
 			if err != nil {
 				return nil, fmt.Errorf("Failed to get password: %v", err)
@@ -231,7 +230,7 @@ func loadOrCreateKey() (*crypto.PrivateKey, error) {
 
 			fmt.Println("")
 			fmt.Println("-----------------------------------------------------------------------------------------------------")
-			fmt.Println("IMPORTANT: Please store your password securely. You will need it each time you launch the Theta node.")
+			fmt.Println("IMPORTANT: Please store your password securely. You will need it each time you launch the Script node.")
 			fmt.Println("-----------------------------------------------------------------------------------------------------")
 			fmt.Println("")
 
@@ -256,7 +255,7 @@ func loadOrCreateKey() (*crypto.PrivateKey, error) {
 		printCountdown()
 
 	} else {
-		prompt := fmt.Sprintf("Please enter the password to launch the Theta node: ")
+		prompt := fmt.Sprintf("Please enter the password to launch the Script node: ")
 		if len(nodePassword) != 0 {
 			password = nodePassword
 		} else {
@@ -306,7 +305,7 @@ func newMessengerOld(privKey *crypto.PrivateKey, seedPeerNetAddresses []string, 
 
 func printCountdown() {
 	for i := 10; i >= 0; i-- {
-		fmt.Printf("\rLaunching Theta to da moon: %d...", i)
+		fmt.Printf("\rLaunching Script to da moon: %d...", i)
 		time.Sleep(1 * time.Second)
 	}
 	fmt.Printf("\n\n")
@@ -316,19 +315,9 @@ func printWelcomeBanner() {
 	fmt.Println("")
 	fmt.Println("")
 	fmt.Println(" ######################################################### ")
-	fmt.Println("#                                                         #")
-	fmt.Println("#  _    _      _ _         _______ _          _           #")
-	fmt.Println("#  | |  | |    | | |       |__   __| |        | |         #")
-	fmt.Println("#  | |__| | ___| | | ___      | |  | |__   ___| |_ __ _   #")
-	fmt.Println("#  |  __  |/ _ \\ | |/ _ \\     | |  | '_ \\ / _ \\ __/ _` |  #")
-	fmt.Println("#  | |  | |  __/ | | (_) |    | |  | | | |  __/ || (_| |  #")
-	fmt.Println("#  |_|  |_|\\___|_|_|\\___/     |_|  |_| |_|\\___|\\__\\__,_|  #")
-	fmt.Println("#                                                         #")
-	fmt.Println("#                                                         #")
+	fmt.Println("Hello Script")
 	fmt.Println(" ######################################################### ")
 	fmt.Println("")
-	fmt.Println("")
-	fmt.Printf("Version %v, GitHash %s\nBuilt at %s\n", version.Version, version.GitHash, version.Timestamp)
 	fmt.Println("")
 }
 
@@ -336,16 +325,7 @@ func printExitBanner() {
 	fmt.Println("")
 	fmt.Println("")
 	fmt.Println(" #################################################### ")
-	fmt.Println("#                                                    #")
-	fmt.Println("#  ____               _______ _          _           #")
-	fmt.Println("#  |  _ \\             |__   __| |        | |         #")
-	fmt.Println("#  | |_) |_   _  ___     | |  | |__   ___| |_ __ _   #")
-	fmt.Println("#  |  _ <| | | |/ _ \\    | |  | '_ \\ / _ \\ __/ _` |  #")
-	fmt.Println("#  | |_) | |_| |  __/    | |  | | | |  __/ || (_| |  #")
-	fmt.Println("#  |____/ \\__, |\\___|    |_|  |_| |_|\\___|\\__\\__,_|  #")
-	fmt.Println("#          __/ |                                     #")
-	fmt.Println("#         |___/                                      #")
-	fmt.Println("#                                                    #")
+	fmt.Println("Bye Script")
 	fmt.Println(" #################################################### ")
 	fmt.Println("")
 	fmt.Println("")

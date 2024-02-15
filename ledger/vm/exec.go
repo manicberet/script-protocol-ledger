@@ -4,12 +4,12 @@ import (
 	"math"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/ledger/vm/params"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/ledger/vm/params"
 )
 
 // Execute executes the given smart contract
@@ -32,7 +32,7 @@ func Execute(parentBlock *core.Block, tx *types.SmartContractTx, storeView *stat
 	config := Config{}
 	evm := NewEVM(context, storeView, chainConfig, config)
 
-	value := tx.From.Coins.TFuelWei
+	value := tx.From.Coins.SPAYWei
 	if value == nil {
 		value = big.NewInt(0)
 	}
@@ -110,14 +110,10 @@ func calculateIntrinsicGas(data []byte, createContract bool) (uint64, error) {
 func mapChainID(chainIDStr string) *big.Int {
 	if chainIDStr == "mainnet" { // correspond to the Ethereum mainnet
 		return big.NewInt(1)
-	} else if chainIDStr == "testnet_sapphire" { // correspond to Ropsten
-		return big.NewInt(3)
-	} else if chainIDStr == "testnet_amber" { // correspond to Rinkeby
-		return big.NewInt(4)
 	} else if chainIDStr == "testnet" {
-		return big.NewInt(5)
-	} else if chainIDStr == "privatenet" {
-		return big.NewInt(6)
+		return big.NewInt(7)
+	} else if chainIDStr == "scriptnet" {
+		return big.NewInt(8)
 	}
 
 	chainIDBigInt := new(big.Int).Abs(crypto.Keccak256Hash(common.Bytes(chainIDStr)).Big()) // all other chainIDs

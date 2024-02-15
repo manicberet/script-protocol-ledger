@@ -12,10 +12,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database/backend"
 )
 
 func TestVMExecute(t *testing.T) {
@@ -271,7 +271,7 @@ func TestVMExecutionDeployComplexContract(t *testing.T) {
 	log.Infof("Call   Contract -- retrievedTokenAddr: %v", retrievedTokenAddr)
 }
 
-// The test case below is based on the production Theta ERC20 Token smart contract deployed on the Ethereum blockchain
+// The test case below is based on the production Script ERC20 Token smart contract deployed on the Ethereum blockchain
 // https://etherscan.io/tx/0x078358d68d132458fc964cfb19011f8e561da5c4ebb6e47b27032813d684861b
 // The deplyment_code hex string in testdata/erc20_token.json is the "Input Data" of the above transaction
 func TestVMExecutionDeployERC20TokenContract(t *testing.T) {
@@ -328,7 +328,7 @@ func TestVMExecutionDeployERC20TokenContract(t *testing.T) {
 	vmRet, _, gasUsed, vmErr = Execute(nameCallTx, storeView)
 	assert.Nil(vmErr)
 	name := string(vmRet[64:75])
-	assert.Equal("Theta Token", name)
+	assert.Equal("Script Token", name)
 	log.Infof("Call   Contract -- name: %v", name)
 
 	symbolCallTx := callSCTXTmpl
@@ -337,7 +337,7 @@ func TestVMExecutionDeployERC20TokenContract(t *testing.T) {
 	vmRet, _, gasUsed, vmErr = Execute(symbolCallTx, storeView)
 	assert.Nil(vmErr)
 	symbol := string(vmRet[64:69])
-	assert.Equal("THETA", symbol)
+	assert.Equal("SCRIPT", symbol)
 	log.Infof("Call   Contract -- symbol: %v", symbol)
 }
 

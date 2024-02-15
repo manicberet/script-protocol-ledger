@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,19 +14,19 @@ import (
 
 // accountCmd represents the account command.
 // Example:
-//		thetacli query account --address=0x2E833968E5bB786Ae419c4d13189fB081Cc43bab
+//		scriptcli query account --address=0x98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5
 var accountCmd = &cobra.Command{
 	Use:     "account",
 	Short:   "Get account status",
 	Long:    `Get account status.`,
-	Example: `thetacli query account --address=0x2E833968E5bB786Ae419c4d13189fB081Cc43bab`,
+	Example: `scriptcli query account --address=0x98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5`,
 	Run:     doAccountCmd,
 }
 
 func doAccountCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.GetAccount", rpc.GetAccountArgs{
+	res, err := client.Call("script.GetAccount", rpc.GetAccountArgs{
 		Address: addressFlag, Preview: previewFlag})
 	if err != nil {
 		utils.Error("Failed to get account details: %v\n", err)

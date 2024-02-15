@@ -21,11 +21,11 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/crypto/bn256"
-	"github.com/thetatoken/theta/ledger/vm/params"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/crypto/bn256"
+	"github.com/scripttoken/script/ledger/vm/params"
 	"golang.org/x/crypto/ripemd160"
 )
 
@@ -58,8 +58,8 @@ var PrecompiledContractsByzantium = map[common.Address]PrecompiledContract{
 	common.BytesToAddress([]byte{7}): &bn256ScalarMul{},
 	common.BytesToAddress([]byte{8}): &bn256Pairing{},
 
-	common.BytesToAddress([]byte{201}): &thetaBalance{},
-	common.BytesToAddress([]byte{202}): &thetaStake{},
+	common.BytesToAddress([]byte{201}): &scriptBalance{},
+	common.BytesToAddress([]byte{202}): &scriptStake{},
 }
 
 // RunPrecompiledContract runs and evaluates the output of a precompiled contract.
@@ -362,36 +362,36 @@ func (c *bn256Pairing) Run(evm *EVM, input []byte) ([]byte, error) {
 	return false32Byte, nil
 }
 
-// thetaBalance retrieves the ThetaWei balance of the given address
-type thetaBalance struct {
+// scriptBalance retrieves the SCPTWei balance of the given address
+type scriptBalance struct {
 }
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *thetaBalance) RequiredGas(input []byte) uint64 {
-	return params.ThetaBalanceGas
+func (c *scriptBalance) RequiredGas(input []byte) uint64 {
+	return params.ScriptBalanceGas
 }
 
-func (c *thetaBalance) Run(evm *EVM, input []byte) ([]byte, error) {
+func (c *scriptBalance) Run(evm *EVM, input []byte) ([]byte, error) {
 	address := common.BytesToAddress(input)
-	thetaBalance := evm.StateDB.GetThetaBalance(address)
-	thetaBalanceBytes := thetaBalance.Bytes()
-	thetaBalanceBytes32 := common.LeftPadBytes(thetaBalanceBytes[:], 32) // easier to convert bytes32 into uint256 in smart contracts
-	return thetaBalanceBytes32, nil
+	scriptBalance := evm.StateDB.GetScriptBalance(address)
+	scriptBalanceBytes := scriptBalance.Bytes()
+	scriptBalanceBytes32 := common.LeftPadBytes(scriptBalanceBytes[:], 32) // easier to convert bytes32 into uint256 in smart contracts
+	return scriptBalanceBytes32, nil
 }
 
-// thetaStake retrieves the total amount of ThetaWei the address staked to validators and/or guardians
-type thetaStake struct {
+// scriptStake retrieves the total amount of SCPTWei the address staked to validators and/or guardians
+type scriptStake struct {
 }
 
 // RequiredGas returns the gas required to execute the pre-compiled contract.
-func (c *thetaStake) RequiredGas(input []byte) uint64 {
-	return params.ThetaStakeGas
+func (c *scriptStake) RequiredGas(input []byte) uint64 {
+	return params.ScriptStakeGas
 }
 
-func (c *thetaStake) Run(evm *EVM, input []byte) ([]byte, error) {
+func (c *scriptStake) Run(evm *EVM, input []byte) ([]byte, error) {
 	address := common.BytesToAddress(input)
-	thetaStake := evm.StateDB.GetThetaStake(address)
-	thetaStakeBytes := thetaStake.Bytes()
-	thetaStakeBytes32 := common.LeftPadBytes(thetaStakeBytes[:], 32) // easier to convert bytes32 into uint256 in smart contracts
-	return thetaStakeBytes32, nil
+	scriptStake := evm.StateDB.GetScriptStake(address)
+	scriptStakeBytes := scriptStake.Bytes()
+	scriptStakeBytes32 := common.LeftPadBytes(scriptStakeBytes[:], 32) // easier to convert bytes32 into uint256 in smart contracts
+	return scriptStakeBytes32, nil
 }

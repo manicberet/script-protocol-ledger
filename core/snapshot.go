@@ -9,11 +9,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rlp"
 )
 
-const SnapshotHeaderMagic = "ThetaToDaMoon"
+const SnapshotHeaderMagic = "ScriptToDaMoon"
 const BlockTrioStoreKeyPrefix = "prooftrio_"
 const (
 	SVStart = iota

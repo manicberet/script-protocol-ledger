@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/viper"
 	rpcc "github.com/ybbus/jsonrpc"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 )
 
 // smartContractCmd represents the smart_contract command, which can be used to calls the specified smart contract.
@@ -21,19 +21,19 @@ import (
 // for retrieving info from smart contracts without actually spending gas.
 // Examples:
 //   * Deploy a smart contract (local only)
-//		thetacli call smart_contract --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3
+//		scriptcli call smart_contract --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3
 //   * Call an API of a smart contract (local only)
-//		thetacli call smart_contract --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000
+//		scriptcli call smart_contract --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000
 
 var smartContractCmd = &cobra.Command{
 	Use:   "smart_contract",
 	Short: "Call or deploy a smart contract",
 	Example: `
 	[Deploy a smart contract (local only)]
-	thetacli call smart_contract --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3
+	scriptcli call smart_contract --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3
 	
 	[Call an API of a smart contract (local only)]
-	thetacli call smart_contract --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000
+	scriptcli call smart_contract --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000
 	`,
 	Long: `smartContractCmd represents the smart_contract command, which can be used to calls the specified smart contract.
 		However, calling a smart contract does NOT modify the globally consensus state. It can be used for dry run, or for retrieving info from smart contracts without actually spending gas.`,
@@ -44,8 +44,8 @@ func doSmartContractCmd(cmd *cobra.Command, args []string) {
 	from := types.TxInput{
 		Address: common.HexToAddress(fromFlag),
 		Coins: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: new(big.Int).SetUint64(valueFlag),
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: new(big.Int).SetUint64(valueFlag),
 		},
 		Sequence: seqFlag,
 	}
@@ -86,7 +86,7 @@ func doSmartContractCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.CallSmartContract", rpcCallArgs)
+	res, err := client.Call("script.CallSmartContract", rpcCallArgs)
 	if err != nil {
 		utils.Error("Failed to call smart contract: %v\n", err)
 	}

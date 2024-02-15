@@ -8,11 +8,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/p2p"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/p2p"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
+	"github.com/scripttoken/script/rlp"
 )
 
 func TestMessengerBroadcastMessages(t *testing.T) {
@@ -29,7 +29,7 @@ func TestMessengerBroadcastMessages(t *testing.T) {
 	peerCMessages := []string{
 		"Hi this is Peer C",
 		"Let me tell you guys something exciting",
-		"Theta is awesome, period",
+		"Script is awesome, period",
 	}
 
 	// ---------------- Simulate PeerA ---------------- //

@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -19,19 +19,19 @@ var (
 
 // chainCorrectionCmd represents the chain correction command.
 // Example:
-//		thetacli backup chain_correction
+//		scriptcli backup chain_correction
 var chainCorrectionCmd = &cobra.Command{
 	Use:     "chain_correction",
 	Short:   "backup chain_correction",
 	Long:    `Backup chain_correction.`,
-	Example: `thetacli backup chain_correction`,
+	Example: `scriptcli backup chain_correction`,
 	Run:     doChainCorrectionCmd,
 }
 
 func doChainCorrectionCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BackupChainCorrection", rpc.BackupChainCorrectionArgs{SnapshotHeight: heightFlag, EndBlockHash: common.HexToHash(hashFlag), Config: configFlag, ExclusionTxs: exclusionTxsFlag})
+	res, err := client.Call("script.BackupChainCorrection", rpc.BackupChainCorrectionArgs{SnapshotHeight: heightFlag, EndBlockHash: common.HexToHash(hashFlag), Config: configFlag, ExclusionTxs: exclusionTxsFlag})
 	if err != nil {
 		utils.Error("Failed to get backup chain call details: %v\n", err)
 	}

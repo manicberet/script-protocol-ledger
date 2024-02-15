@@ -19,8 +19,8 @@ package vm
 import (
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 // StateDB is an EVM database for full state querying.
@@ -31,8 +31,8 @@ type StateDB interface {
 	AddBalance(common.Address, *big.Int)
 	GetBalance(common.Address) *big.Int
 
-	GetThetaBalance(common.Address) *big.Int // GetThetaBalance returns the ThetaWei balance of the given address
-	GetThetaStake(common.Address) *big.Int   // GetThetaStake returns the total amount of ThetaWei the address staked to validators and/or guardians
+	GetScriptBalance(common.Address) *big.Int // GetScriptBalance returns the SCPTWei balance of the given address
+	GetScriptStake(common.Address) *big.Int   // GetScriptStake returns the total amount of SCPTWei the address staked to validators and/or guardians
 
 	GetNonce(common.Address) uint64
 	SetNonce(common.Address, uint64)

@@ -6,25 +6,25 @@ import (
 	"path"
 	"strings"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/backup"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/backup"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/call"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/daemon"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/key"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/query"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/tx"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/call"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/daemon"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/key"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/query"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/tx"
 )
 
 var cfgPath string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "thetacli",
-	Short: "Theta wallet",
-	Long:  `Theta wallet.`,
+	Use:   "scriptcli",
+	Short: "Script wallet",
+	Long:  `Script wallet.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -72,5 +72,5 @@ func getDefaultConfigPath() string {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	return path.Join(home, ".thetacli")
+	return path.Join(home, ".scriptcli")
 }

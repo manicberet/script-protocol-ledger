@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,19 +14,19 @@ import (
 
 // snapshotCmd represents the snapshot backup command.
 // Example:
-//		thetacli backup snapshot
+//		scriptcli backup snapshot
 var snapshotCmd = &cobra.Command{
 	Use:     "snapshot",
 	Short:   "backup snapshot",
 	Long:    `Backup snapshot.`,
-	Example: `thetacli backup snapshot`,
+	Example: `scriptcli backup snapshot`,
 	Run:     doSnapshotCmd,
 }
 
 func doSnapshotCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BackupSnapshot", rpc.BackupSnapshotArgs{Config: configFlag, Height: heightFlag})
+	res, err := client.Call("script.BackupSnapshot", rpc.BackupSnapshotArgs{Config: configFlag, Height: heightFlag})
 	if err != nil {
 		utils.Error("Failed to get backup snapshot call details: %v\n", err)
 	}

@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 
 	pr "github.com/libp2p/go-libp2p-core/peer"
-	"github.com/thetatoken/theta/common"
-	mm "github.com/thetatoken/theta/common/math"
+	"github.com/scripttoken/script/common"
+	mm "github.com/scripttoken/script/common/math"
 
 	"github.com/spf13/viper"
 	"github.com/syndtr/goleveldb/leveldb"

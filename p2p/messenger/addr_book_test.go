@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright Tendermint
 package messenger
 
@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/p2p/netutil"
+	"github.com/scripttoken/script/p2p/netutil"
 )
 
 func createTempFileName(prefix string) string {

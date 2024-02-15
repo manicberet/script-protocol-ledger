@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -28,7 +28,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/crypto"
 )
 
 const (
@@ -37,7 +37,7 @@ const (
 )
 
 func tmpKeyStoreIface(t *testing.T, encrypted bool) (dir string, ks Keystore) {
-	d, err := ioutil.TempDir("", "theta-keystore-test")
+	d, err := ioutil.TempDir("", "script-keystore-test")
 	if err != nil {
 		t.Fatal(err)
 	}

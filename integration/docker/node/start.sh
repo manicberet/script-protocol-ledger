@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "starting"
-/bin/theta start --password=qwertyuiop
+/bin/script start --password=qwertyuiop

@@ -4,22 +4,22 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
-// guardianCmd retreves guardian related information from Theta server.
+// guardianCmd retreves guardian related information from Script server.
 // Example:
-//		thetacli query guardian
+//		scriptcli query guardian
 var guardianCmd = &cobra.Command{
-	Use:     "guardian",
-	Short:   "Get guardian info",
-	Long:    `Get guardian status.`,
-	Example: `thetacli query guardian`,
+	Use:     "lightning",
+	Short:   "Get lightning info",
+	Long:    `Get lightning status.`,
+	Example: `scriptcli query lightning`,
 	Run:     doGuardianCmd,
 }
 
@@ -34,7 +34,7 @@ type GuardianResult struct {
 func doGuardianCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.GetGuardianInfo", rpc.GetGuardianInfoArgs{})
+	res, err := client.Call("script.GetGuardianInfo", rpc.GetGuardianInfoArgs{})
 	if err != nil {
 		utils.Error("Failed to get guardian info: %v\n", err)
 	}

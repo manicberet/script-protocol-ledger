@@ -7,23 +7,23 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	dp "github.com/thetatoken/theta/dispatcher"
-	exec "github.com/thetatoken/theta/ledger/execution"
-	"github.com/thetatoken/theta/ledger/state"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	mp "github.com/thetatoken/theta/mempool"
-	"github.com/thetatoken/theta/p2p"
-	p2psim "github.com/thetatoken/theta/p2p/simulation"
-	"github.com/thetatoken/theta/p2pl"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/database/backend"
-	"github.com/thetatoken/theta/store/kvstore"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	dp "github.com/scripttoken/script/dispatcher"
+	exec "github.com/scripttoken/script/ledger/execution"
+	"github.com/scripttoken/script/ledger/state"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	mp "github.com/scripttoken/script/mempool"
+	"github.com/scripttoken/script/p2p"
+	p2psim "github.com/scripttoken/script/p2p/simulation"
+	"github.com/scripttoken/script/p2pl"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/database/backend"
+	"github.com/scripttoken/script/store/kvstore"
 )
 
 type mockSnapshot struct {
@@ -112,28 +112,28 @@ func genSimSnapshot(chainID string, db database.Database) (snapshot mockSnapshot
 	src5Acc := types.MakeAcc("src5")
 	src6Acc := types.MakeAcc("src6")
 	src1Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 	src2Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 	src3Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 	src4Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 	src5Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 	src6Acc.Balance = types.Coins{
-		ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
-		TFuelWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
+		SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(20), core.MinValidatorStakeDeposit),
+		SPAYWei: new(big.Int).Mul(new(big.Int).SetUint64(100), core.MinValidatorStakeDeposit),
 	}
 
 	val1Acc := types.MakeAcc("va1")
@@ -361,6 +361,58 @@ func newRawSendTx(chainID string, sequence int, addPubKey bool, accOut, accIn ty
 	return sendTxBytes
 }
 
-func getMinimumTxFee() int64 {
-	return int64(types.MinimumTransactionFeeTFuelWei)
+func newRawEdgeStakeTx(chainID string, sequence int, addPubKey bool, accOut, accIn types.PrivAccount, injectFeeFluctuation bool) common.Bytes {
+	delta := int64(0)
+	var err error
+	if injectFeeFluctuation {
+		// inject so fluctuation into the txFee, so later we can test whether the
+		// mempool orders the txs by txFee
+		randint, err := strconv.ParseInt(string(accIn.Address.Hex()[2:9]), 16, 64)
+		if randint < 0 {
+			randint = -randint
+		}
+		delta = randint * int64(types.GasSendTxPerAccount*2)
+		if err != nil {
+			panic(err)
+		}
+	}
+	txFee := getMinimumTxFee() + delta
+	edgeStakeTx := &types.EdgeStakeTx{
+		Fee: types.NewCoins(0, txFee),
+		Inputs: []types.TxInput{
+			{
+				Sequence: uint64(sequence),
+				Address:  accIn.Address,
+				Coins:    types.NewCoins(15, txFee),
+			},
+		},
+		Outputs: []types.TxOutput{
+			{
+				Address: accOut.Address,
+				Coins:   types.NewCoins(15, 0),
+			},
+		},
+	}
+
+	signBytes := edgeStakeTx.SignBytes(chainID)
+	inAccs := []types.PrivAccount{accIn}
+	for idx, in := range edgeStakeTx.Inputs {
+		inAcc := inAccs[idx]
+		sig, err := inAcc.PrivKey.Sign(signBytes)
+		if err != nil {
+			panic("Failed to sign the coinbase transaction")
+		}
+		edgeStakeTx.SetSignature(in.Address, sig)
+	}
+
+	sendTxBytes, err := types.TxToBytes(edgeStakeTx)
+	if err != nil {
+		panic(err)
+	}
+	return sendTxBytes
 }
+
+func getMinimumTxFee() int64 {
+	return int64(types.MinimumTransactionFeeSPAYWei)
+}
+

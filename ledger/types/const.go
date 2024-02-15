@@ -1,11 +1,11 @@
 package types
 
 const (
-	// DenomThetaWei is the basic unit of theta, 1 Theta = 10^18 ThetaWei
-	DenomThetaWei string = "ThetaWei"
+	// DenomSCPTWei is the basic unit of script, 1 Script = 10^18 SCPTWei
+	DenomSCPTWei string = "SCPTWei"
 
-	// DenomTFuelWei is the basic unit of theta, 1 Theta = 10^18 ThetaWei
-	DenomTFuelWei string = "TFuelWei"
+	// DenomSPAYWei is the basic unit of script, 1 Script = 10^18 SCPTWei
+	DenomSPAYWei string = "SPAYWei"
 
 	// MinimumGasPrice is the minimum gas price for a smart contract transaction
 	MinimumGasPrice uint64 = 1e8
@@ -14,39 +14,39 @@ const (
 	//MaximumTxGasLimit uint64 = 2e6
 	MaximumTxGasLimit uint64 = 10e6
 
-	// MinimumTransactionFeeTFuelWei specifies the minimum fee for a regular transaction
-	MinimumTransactionFeeTFuelWei uint64 = 1e12
+	// MinimumTransactionFeeSPAYWei specifies the minimum fee for a regular transaction
+	MinimumTransactionFeeSPAYWei uint64 = 1e12
 
 	// MaxAccountsAffectedPerTx specifies the max number of accounts one transaction is allowed to modify to avoid spamming
 	MaxAccountsAffectedPerTx = 512
 )
 
 const (
-	// ValidatorThetaGenerationRateNumerator is used for calculating the generation rate of Theta for validators
-	//ValidatorThetaGenerationRateNumerator int64 = 317
-	ValidatorThetaGenerationRateNumerator int64 = 0 // ZERO inflation for Theta
+	// ValidatorScriptGenerationRateNumerator is used for calculating the generation rate of Script for validators
+	//ValidatorScriptGenerationRateNumerator int64 = 317
+	ValidatorScriptGenerationRateNumerator int64 = 0 // ZERO inflation for Script
 
-	// ValidatorThetaGenerationRateDenominator is used for calculating the generation rate of Theta for validators
-	// ValidatorThetaGenerationRateNumerator / ValidatorThetaGenerationRateDenominator is the amount of ThetaWei
-	// generated per existing ThetaWei per new block
-	ValidatorThetaGenerationRateDenominator int64 = 1e11
+	// ValidatorScriptGenerationRateDenominator is used for calculating the generation rate of Script for validators
+	// ValidatorScriptGenerationRateNumerator / ValidatorScriptGenerationRateDenominator is the amount of SCPTWei
+	// generated per existing SCPTWei per new block
+	ValidatorScriptGenerationRateDenominator int64 = 1e11
 
-	// ValidatorTFuelGenerationRateNumerator is used for calculating the generation rate of TFuel for validators
-	ValidatorTFuelGenerationRateNumerator int64 = 0 // ZERO initial inflation for TFuel
+	// ValidatorSPAYGenerationRateNumerator is used for calculating the generation rate of SPAY for validators
+	ValidatorSPAYGenerationRateNumerator int64 = 0 // ZERO initial inflation for SPAY
 
-	// ValidatorTFuelGenerationRateDenominator is used for calculating the generation rate of TFuel for validators
-	// ValidatorTFuelGenerationRateNumerator / ValidatorTFuelGenerationRateDenominator is the amount of TFuelWei
-	// generated per existing ThetaWei per new block
-	ValidatorTFuelGenerationRateDenominator int64 = 1e9
+	// ValidatorSPAYGenerationRateDenominator is used for calculating the generation rate of SPAY for validators
+	// ValidatorSPAYGenerationRateNumerator / ValidatorSPAYGenerationRateDenominator is the amount of SPAYWei
+	// generated per existing SCPTWei per new block
+	ValidatorSPAYGenerationRateDenominator int64 = 1e9
 
-	// RegularTFuelGenerationRateNumerator is used for calculating the generation rate of TFuel for other types of accounts
-	//RegularTFuelGenerationRateNumerator int64 = 1900
-	RegularTFuelGenerationRateNumerator int64 = 0 // ZERO initial inflation for TFuel
+	// RegularSPAYGenerationRateNumerator is used for calculating the generation rate of SPAY for other types of accounts
+	//RegularSPAYGenerationRateNumerator int64 = 1900
+	RegularSPAYGenerationRateNumerator int64 = 0 // ZERO initial inflation for SPAY
 
-	// RegularTFuelGenerationRateDenominator is used for calculating the generation rate of TFuel for other types of accounts
-	// RegularTFuelGenerationRateNumerator / RegularTFuelGenerationRateDenominator is the amount of TFuelWei
-	// generated per existing ThetaWei per new block
-	RegularTFuelGenerationRateDenominator int64 = 1e10
+	// RegularSPAYGenerationRateDenominator is used for calculating the generation rate of SPAY for other types of accounts
+	// RegularSPAYGenerationRateNumerator / RegularSPAYGenerationRateDenominator is the amount of SPAYWei
+	// generated per existing SCPTWei per new block
+	RegularSPAYGenerationRateDenominator int64 = 1e10
 )
 
 const (

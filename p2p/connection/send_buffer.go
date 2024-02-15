@@ -4,7 +4,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 type SendBuffer struct {

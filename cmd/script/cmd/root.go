@@ -6,8 +6,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -23,8 +23,8 @@ var nodePassword string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:   "theta",
-	Short: "Theta",
+	Use:   "script",
+	Short: "Script",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -63,7 +63,7 @@ func initConfig() {
 	// Search config (without extension).
 	viper.SetConfigName("config")
 
-	viper.SetEnvPrefix("THETA")
+	viper.SetEnvPrefix("SCRIPT")
 	viper.AutomaticEnv() // read in environment variables that match
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
@@ -89,7 +89,7 @@ func getDefaultConfigPath() string {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	return path.Join(home, ".theta")
+	return path.Join(home, ".script")
 }
 
 func getDefaultSnapshotPath() string {

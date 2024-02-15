@@ -133,7 +133,7 @@ const (
 )
 
 // InitialConfig is the default configuration produced by init command.
-const InitialConfig = `# Theta configuration
+const InitialConfig = `# Script configuration
 p2p:
   port: 5000
   seeds: 127.0.0.1:6000,127.0.0.1:7000
@@ -142,7 +142,7 @@ p2p:
 func init() {
 	viper.SetDefault(CfgForceValidateSnapshot, false)
 
-	viper.SetDefault(CfgConsensusMaxEpochLength, 20)
+	viper.SetDefault(CfgConsensusMaxEpochLength, 10)
 	viper.SetDefault(CfgConsensusMinProposalWait, 6)
 	viper.SetDefault(CfgConsensusMessageQueueSize, 512)
 	viper.SetDefault(CfgConsensusPassThroughGuardianVote, false)
@@ -188,7 +188,7 @@ func init() {
 
 	viper.SetDefault(CfgGuardianRoundLength, 30)
 
-	viper.SetDefault(CfgMetricsServer, "guardian-metrics.thetatoken.org")
+	viper.SetDefault(CfgMetricsServer, "")
 
 	viper.SetDefault(CfgProfEnabled, false)
 	viper.SetDefault(CfgForceGCEnabled, true)

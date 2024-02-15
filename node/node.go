@@ -7,23 +7,23 @@ import (
 	"sync"
 
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	dp "github.com/thetatoken/theta/dispatcher"
-	ld "github.com/thetatoken/theta/ledger"
-	mp "github.com/thetatoken/theta/mempool"
-	"github.com/thetatoken/theta/netsync"
-	"github.com/thetatoken/theta/p2p"
-	"github.com/thetatoken/theta/p2pl"
-	rp "github.com/thetatoken/theta/report"
-	"github.com/thetatoken/theta/rpc"
-	"github.com/thetatoken/theta/snapshot"
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/kvstore"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	dp "github.com/scripttoken/script/dispatcher"
+	ld "github.com/scripttoken/script/ledger"
+	mp "github.com/scripttoken/script/mempool"
+	"github.com/scripttoken/script/netsync"
+	"github.com/scripttoken/script/p2p"
+	"github.com/scripttoken/script/p2pl"
+	rp "github.com/scripttoken/script/report"
+	"github.com/scripttoken/script/rpc"
+	"github.com/scripttoken/script/snapshot"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/kvstore"
 )
 
 type Node struct {
@@ -35,7 +35,7 @@ type Node struct {
 	Dispatcher       *dp.Dispatcher
 	Ledger           core.Ledger
 	Mempool          *mp.Mempool
-	RPC              *rpc.ThetaRPCServer
+	RPC              *rpc.ScriptRPCServer
 	reporter         *rp.Reporter
 
 	// Life cycle
@@ -115,7 +115,7 @@ func NewNode(params *Params) *Node {
 	}
 
 	if viper.GetBool(common.CfgRPCEnabled) {
-		node.RPC = rpc.NewThetaRPCServer(mempool, ledger, dispatcher, chain, consensus)
+		node.RPC = rpc.NewScriptRPCServer(mempool, ledger, dispatcher, chain, consensus)
 	}
 	return node
 }

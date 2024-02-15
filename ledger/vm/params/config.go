@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 // Genesis hashes to enforce below configs on.
@@ -253,7 +253,7 @@ func (c *ChainConfig) IsEWASM(num *big.Int) bool {
 //
 // The returned GasTable's fields shouldn't, under any circumstances, be changed.
 func (c *ChainConfig) GasTable(num *big.Int) GasTable {
-	return ThetaGasTable
+	return ScriptGasTable
 }
 
 // CheckCompatible checks whether scheduled fork transitions have been imported

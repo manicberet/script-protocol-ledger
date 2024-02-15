@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // reserveFundCmd represents the reserve fund command
 // Example:
-//		thetacli tx reserve --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --fund=900 --collateral=1203 --seq=6 --duration=1002 --resource_ids=die_another_day,hello
+//		scriptcli tx reserve --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --fund=900 --collateral=1203 --seq=6 --duration=1002 --resource_ids=die_another_day,hello
 var reserveFundCmd = &cobra.Command{
 	Use:     "reserve",
 	Short:   "Reserve fund for an off-chain micropayment",
-	Example: `thetacli tx reserve --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --fund=900 --collateral=1203 --seq=6 --duration=1002 --resource_ids=die_another_day,hello`,
+	Example: `scriptcli tx reserve --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --fund=900 --collateral=1203 --seq=6 --duration=1002 --resource_ids=die_another_day,hello`,
 	Run:     doReserveFundCmd,
 }
 
@@ -35,19 +35,19 @@ func doReserveFundCmd(cmd *cobra.Command, args []string) {
 	if !ok {
 		utils.Error("Failed to parse fee")
 	}
-	fund, ok := types.ParseCoinAmount(reserveFundInTFuelFlag)
+	fund, ok := types.ParseCoinAmount(reserveFundInSPAYFlag)
 	if !ok {
 		utils.Error("Failed to parse fund")
 	}
-	col, ok := types.ParseCoinAmount(reserveCollateralInTFuelFlag)
+	col, ok := types.ParseCoinAmount(reserveCollateralInSPAYFlag)
 	if !ok {
 		utils.Error("Failed to parse collateral")
 	}
 	input := types.TxInput{
 		Address: fromAddress,
 		Coins: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: fund,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: fund,
 		},
 		Sequence: uint64(seqFlag),
 	}
@@ -56,8 +56,8 @@ func doReserveFundCmd(cmd *cobra.Command, args []string) {
 		resourceIDs = append(resourceIDs, id)
 	}
 	collateral := types.Coins{
-		ThetaWei: new(big.Int).SetUint64(0),
-		TFuelWei: col,
+		SCPTWei: new(big.Int).SetUint64(0),
+		SPAYWei: col,
 	}
 	if !collateral.IsPositive() {
 		utils.Error("Invalid input: collateral must be positive\n")
@@ -65,8 +65,8 @@ func doReserveFundCmd(cmd *cobra.Command, args []string) {
 
 	reserveFundTx := &types.ReserveFundTx{
 		Fee: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: fee,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: fee,
 		},
 		Source:      input,
 		ResourceIDs: resourceIDs,
@@ -88,7 +88,7 @@ func doReserveFundCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+	res, err := client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	if err != nil {
 		utils.Error("Failed to broadcast transaction: %v\n", err)
 	}
@@ -102,9 +102,9 @@ func init() {
 	reserveFundCmd.Flags().StringVar(&chainIDFlag, "chain", "", "Chain ID")
 	reserveFundCmd.Flags().StringVar(&fromFlag, "from", "", "Address to send from")
 	reserveFundCmd.Flags().Uint64Var(&seqFlag, "seq", 0, "Sequence number of the transaction")
-	reserveFundCmd.Flags().StringVar(&reserveFundInTFuelFlag, "fund", "0", "TFuel amount to reserve")
-	reserveFundCmd.Flags().StringVar(&reserveCollateralInTFuelFlag, "collateral", "0", "TFuel amount as collateral")
-	reserveFundCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeTFuelWei), "Fee")
+	reserveFundCmd.Flags().StringVar(&reserveFundInSPAYFlag, "fund", "0", "SPAY amount to reserve")
+	reserveFundCmd.Flags().StringVar(&reserveCollateralInSPAYFlag, "collateral", "0", "SPAY amount as collateral")
+	reserveFundCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeSPAYWei), "Fee")
 	reserveFundCmd.Flags().Uint64Var(&durationFlag, "duration", 1000, "Reserve duration")
 	reserveFundCmd.Flags().StringSliceVar(&resourceIDsFlag, "resource_ids", []string{}, "Reserouce IDs")
 	reserveFundCmd.Flags().StringVar(&walletFlag, "wallet", "soft", "Wallet type (soft|nano)")

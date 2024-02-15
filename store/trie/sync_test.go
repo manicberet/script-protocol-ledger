@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -21,8 +21,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thetatoken/theta/common"
-	dbbackend "github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/common"
+	dbbackend "github.com/scripttoken/script/store/database/backend"
 )
 
 // makeTestTrie create a sample test trie to test node-wise reconstruction.

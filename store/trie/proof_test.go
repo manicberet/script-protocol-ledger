@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -24,9 +24,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	dbbackend "github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	dbbackend "github.com/scripttoken/script/store/database/backend"
 )
 
 func init() {

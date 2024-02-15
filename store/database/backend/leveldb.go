@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -31,9 +31,9 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
-	"github.com/thetatoken/theta/common/metrics"
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/common/metrics"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "store"})

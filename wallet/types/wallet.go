@@ -1,8 +1,8 @@
 package types
 
 import (
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
 )
 
 type WalletType int

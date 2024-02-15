@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -215,19 +215,19 @@ func GetEmptyObj(msgType MessageType) interface{} {
 		v := reflect.Indirect(reflect.New(t)).Interface().(GetFeatures)
 		return &v
 	case 56:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaGetAddress)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptGetAddress)
 		return &v
 	case 57:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaAddress)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptAddress)
 		return &v
 	case 58:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaSignTx)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptSignTx)
 		return &v
 	case 59:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaTxRequest)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptTxRequest)
 		return &v
 	case 60:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaTxAck)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptTxAck)
 		return &v
 	case 61:
 		v := reflect.Indirect(reflect.New(t)).Interface().(GetECDHSessionKey)
@@ -239,13 +239,13 @@ func GetEmptyObj(msgType MessageType) interface{} {
 		v := reflect.Indirect(reflect.New(t)).Interface().(SetU2FCounter)
 		return &v
 	case 64:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaSignMessage)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptSignMessage)
 		return &v
 	case 65:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaVerifyMessage)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptVerifyMessage)
 		return &v
 	case 66:
-		v := reflect.Indirect(reflect.New(t)).Interface().(ThetaMessageSignature)
+		v := reflect.Indirect(reflect.New(t)).Interface().(ScriptMessageSignature)
 		return &v
 	case 100:
 		v := reflect.Indirect(reflect.New(t)).Interface().(DebugLinkDecision)

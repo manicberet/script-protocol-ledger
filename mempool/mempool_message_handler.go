@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/thetatoken/theta/common"
-	dp "github.com/thetatoken/theta/dispatcher"
-	"github.com/thetatoken/theta/p2p/types"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	dp "github.com/scripttoken/script/dispatcher"
+	"github.com/scripttoken/script/p2p/types"
+	"github.com/scripttoken/script/rlp"
 )
 
 //

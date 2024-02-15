@@ -4,8 +4,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/snapshot"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/snapshot"
 )
 
 // ------------------------------- BackupSnapshot -----------------------------------
@@ -19,7 +19,7 @@ type BackupSnapshotResult struct {
 	SnapshotFile string `json:"snapshot_file"`
 }
 
-func (t *ThetaRPCService) BackupSnapshot(args *BackupSnapshotArgs, result *BackupSnapshotResult) error {
+func (t *ScriptRPCService) BackupSnapshot(args *BackupSnapshotArgs, result *BackupSnapshotResult) error {
 	db := t.ledger.State().DB()
 	consensus := t.consensus
 	chain := t.chain
@@ -49,7 +49,7 @@ type BackupChainResult struct {
 	ChainFile         string `json:"chain_file"`
 }
 
-func (t *ThetaRPCService) BackupChain(args *BackupChainArgs, result *BackupChainResult) error {
+func (t *ScriptRPCService) BackupChain(args *BackupChainArgs, result *BackupChainResult) error {
 	chain := t.chain
 	startHeight := args.Start
 	endHeight := args.End
@@ -81,7 +81,7 @@ type BackupChainCorrectionResult struct {
 	BlockHashMap map[uint64]string `json:"block_hash_map"`
 }
 
-func (t *ThetaRPCService) BackupChainCorrection(args *BackupChainCorrectionArgs, result *BackupChainCorrectionResult) error {
+func (t *ScriptRPCService) BackupChainCorrection(args *BackupChainCorrectionArgs, result *BackupChainCorrectionResult) error {
 	chain := t.chain
 	ledger := t.consensus.GetLedger()
 	snapshotHeight := args.SnapshotHeight

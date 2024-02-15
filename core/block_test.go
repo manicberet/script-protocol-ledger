@@ -6,9 +6,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/rlp"
 )
 
 func TestBlockEncoding(t *testing.T) {
@@ -19,7 +19,7 @@ func TestBlockEncoding(t *testing.T) {
 	v1, err := hex.DecodeString("f90217f902138974657374636861696e0301a035a8f8d3cf9b6da72f72363d53291f9744cab20e420e7e6545235e93a3588e74e2c0a035a8f8d3cf9b6da72f72363d53291f9744cab20e420e7e6545235e93a3588e74a056e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421a056e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421b9010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000b1845dc3ade894c0a4e0c9b349b13b5e882770bfcf20e985691298b841e745098aff2ddbae9aefbb72850f3ff7542dd26bc06252d235f9975a52152a6e257ce7195a31e14b4be0f185b59fd56f5dc3ee444759d16e8ae7964e9370436b00c0")
 	require.Nil(err)
 
-	// Should be able to encode/decode blocks before Theta2.0 fork.
+	// Should be able to encode/decode blocks before Script2.0 fork.
 	b1 := &Block{}
 	err = rlp.DecodeBytes(v1, b1)
 	require.Nil(err)
@@ -30,7 +30,7 @@ func TestBlockEncoding(t *testing.T) {
 	// Block hash should remain the same.
 	require.Equal(oldBlockHash, b1.Hash())
 
-	// Should be able to encode/decode blocks before Theta2.0 fork.
+	// Should be able to encode/decode blocks before Script2.0 fork.
 	CreateTestBlock("root", "")
 	b2 := CreateTestBlock("b2", "root")
 	b2.AddTxs([]common.Bytes{common.Hex2Bytes("aaa")})
@@ -41,8 +41,8 @@ func TestBlockEncoding(t *testing.T) {
 	b2raw2, _ := rlp.EncodeToBytes(tmp)
 	require.Equal(b2raw1, b2raw2)
 
-	// Should be able to encode/decode blocks after Theta2.0 fork.
-	b2.Height = common.HeightEnableTheta2
+	// Should be able to encode/decode blocks after Script2.0 fork.
+	b2.Height = common.HeightEnableScript2
 	b2raw1, _ = rlp.EncodeToBytes(b2)
 	err = rlp.DecodeBytes(b2raw1, tmp)
 	require.Nil(err)

@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"math/big"
 	"testing"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/ledger/vm"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/ledger/vm"
 )
 
 func TestSimpleSmartContractDeploymentAndExecution(t *testing.T) {
@@ -271,9 +271,9 @@ func deploySmartContract(et *execTest, deployerPrivAcc *types.PrivAccount,
 	deploySCTx.From.Signature = deployerPrivAcc.Sign(signBytes)
 
 	// Dry run to get the smart contract address when it is actually deployed
-	parentBlock := &core.Block {
-		BlockHeader: &core.BlockHeader {
-			Height: 1,
+	parentBlock := &core.Block{
+		BlockHeader: &core.BlockHeader{
+			Height:    1,
 			Timestamp: 1601599331,
 		},
 	}
@@ -337,9 +337,9 @@ func callSmartContract(et *execTest, contractAddr common.Address, callerPrivAcc 
 	stateCopy, err := et.state().Delivered().Copy()
 	assert.Nil(err)
 
-	parentBlock := &core.Block {
-		BlockHeader: &core.BlockHeader {
-			Height: 1,
+	parentBlock := &core.Block{
+		BlockHeader: &core.BlockHeader{
+			Height:    1,
 			Timestamp: 1601599331,
 		},
 	}

@@ -4,10 +4,10 @@ import (
 	"bytes"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/trie"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/trie"
 )
 
 // NewTreeStore create a new instance of TreeStore.

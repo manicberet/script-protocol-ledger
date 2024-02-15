@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -26,8 +26,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
 )
 
 func newTestLDB() (*LDBDatabase, func()) {

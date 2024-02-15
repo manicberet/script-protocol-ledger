@@ -4,13 +4,13 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/version"
+	"github.com/scripttoken/script/version"
 )
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print version of current Thetacli binary.",
+	Short: "Print version of current scriptcli binary.",
 	Run:   runVersion,
 }
 

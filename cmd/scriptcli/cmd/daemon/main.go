@@ -11,7 +11,7 @@ var (
 // DaemonCmd represents the call command
 var DaemonCmd = &cobra.Command{
 	Use:   "daemon",
-	Short: "Run the ThetaCli Daemon",
+	Short: "Run the scriptcli Daemon",
 }
 
 func init() {

@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -18,7 +18,7 @@
 package trie
 
 import (
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 // SecureTrie wraps a trie with key hashing. In a secure trie, all

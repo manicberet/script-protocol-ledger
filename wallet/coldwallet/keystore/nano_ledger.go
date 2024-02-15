@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -30,10 +30,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/hexutil"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/hexutil"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/wallet/types"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "wallet"})

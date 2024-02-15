@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/thetatoken/theta/common/metrics"
+	"github.com/scripttoken/script/common/metrics"
 )
 
 // a regexp for extracting the unit from time.Duration.String

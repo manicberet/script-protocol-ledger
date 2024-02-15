@@ -1,6 +1,6 @@
 package state
 
-import "github.com/thetatoken/theta/common"
+import "github.com/scripttoken/script/common"
 
 //
 // ------------------------- Ledger State Keys -------------------------

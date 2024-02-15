@@ -10,7 +10,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "core"})
@@ -173,8 +173,8 @@ var (
 )
 
 func init() {
-	// Each stake deposit needs to be at least 2,000,000 Theta
-	MinValidatorStakeDeposit = new(big.Int).Mul(new(big.Int).SetUint64(2000000), new(big.Int).SetUint64(1000000000000000000))
+	// Each stake deposit needs to be at least 2,000,000 Script
+	MinValidatorStakeDeposit = new(big.Int).Mul(new(big.Int).SetUint64(250000), new(big.Int).SetUint64(1000000000000000000))
 }
 
 type ValidatorCandidatePool struct {

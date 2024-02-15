@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 var _ TxExecutor = (*WithdrawStakeExecutor)(nil)
@@ -48,8 +48,8 @@ func (exec *WithdrawStakeExecutor) sanityCheck(chainID string, view *st.StoreVie
 	}
 
 	if !sanityCheckForFee(tx.Fee) {
-		return result.Error("Insufficient fee. Transaction fee needs to be at least %v TFuelWei",
-			types.MinimumTransactionFeeTFuelWei).WithErrorCode(result.CodeInvalidFee)
+		return result.Error("Insufficient fee. Transaction fee needs to be at least %v SPAYWei",
+			types.MinimumTransactionFeeSPAYWei).WithErrorCode(result.CodeInvalidFee)
 	}
 
 	if !(tx.Purpose == core.StakeForValidator || tx.Purpose == core.StakeForGuardian) {
@@ -136,6 +136,6 @@ func (exec *WithdrawStakeExecutor) calculateEffectiveGasPrice(transaction types.
 	tx := transaction.(*types.WithdrawStakeTx)
 	fee := tx.Fee
 	gas := new(big.Int).SetUint64(types.GasWidthdrawStakeTx)
-	effectiveGasPrice := new(big.Int).Div(fee.TFuelWei, gas)
+	effectiveGasPrice := new(big.Int).Div(fee.SPAYWei, gas)
 	return effectiveGasPrice
 }

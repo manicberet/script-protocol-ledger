@@ -5,11 +5,11 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto/bls"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto/bls"
+	"github.com/scripttoken/script/rlp"
 
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/crypto"
 )
 
 func createTestGuardianPool(size int) (*GuardianCandidatePool, map[common.Address]*bls.SecretKey) {

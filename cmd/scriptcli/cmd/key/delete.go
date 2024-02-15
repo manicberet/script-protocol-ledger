@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/wallet"
-	wtypes "github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/wallet"
+	wtypes "github.com/scripttoken/script/wallet/types"
 )
 
 // deleteCmd deletes the key corresponding to the given address
@@ -16,10 +16,10 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete",
 	Short:   "Delete a key",
 	Long:    `Delete a key`,
-	Example: "thetacli delete 26d813157F7503a9057FB2DB6Eb2f83a35c4FdD7",
+	Example: "scriptcli delete 26d813157F7503a9057FB2DB6Eb2f83a35c4FdD7",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 1 {
-			utils.Error("Usage: thetacli key <address>\n")
+			utils.Error("Usage: scriptcli key <address>\n")
 		}
 		address := common.HexToAddress(args[0])
 

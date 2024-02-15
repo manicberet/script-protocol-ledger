@@ -5,23 +5,23 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // withdrawStakeCmd represents the withdraw stake command
 // Example:
-//		thetacli tx withdraw --chain="privatenet" --source=2E833968E5bB786Ae419c4d13189fB081Cc43bab --holder=2E833968E5bB786Ae419c4d13189fB081Cc43bab --purpose=0 --seq=8
+//		scriptcli tx withdraw --chain="scriptnet" --source=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --holder=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --purpose=0 --seq=8
 var withdrawStakeCmd = &cobra.Command{
 	Use:     "withdraw",
 	Short:   "withdraw stake to a validator or guardian",
-	Example: `thetacli tx withdraw --chain="privatenet" --source=2E833968E5bB786Ae419c4d13189fB081Cc43bab --holder=2E833968E5bB786Ae419c4d13189fB081Cc43bab --purpose=0 --seq=8`,
+	Example: `scriptcli tx withdraw --chain="scriptnet" --source=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --holder=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --purpose=0 --seq=8`,
 	Run:     doWithdrawStakeCmd,
 }
 
@@ -47,8 +47,8 @@ func doWithdrawStakeCmd(cmd *cobra.Command, args []string) {
 
 	withdrawStakeTx := &types.WithdrawStakeTx{
 		Fee: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: fee,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: fee,
 		},
 		Source:  source,
 		Holder:  holder,
@@ -69,7 +69,7 @@ func doWithdrawStakeCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+	res, err := client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	if err != nil {
 		utils.Error("Failed to broadcast transaction: %v\n", err)
 	}
@@ -84,7 +84,7 @@ func init() {
 	withdrawStakeCmd.Flags().StringVar(&sourceFlag, "source", "", "Source of the stake")
 	withdrawStakeCmd.Flags().StringVar(&holderFlag, "holder", "", "Holder of the stake")
 	withdrawStakeCmd.Flags().StringVar(&pathFlag, "path", "", "Wallet derivation path")
-	withdrawStakeCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeTFuelWei), "Fee")
+	withdrawStakeCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeSPAYWei), "Fee")
 	withdrawStakeCmd.Flags().Uint64Var(&seqFlag, "seq", 0, "Sequence number of the transaction")
 	withdrawStakeCmd.Flags().Uint8Var(&purposeFlag, "purpose", 0, "Purpose of staking")
 	withdrawStakeCmd.Flags().StringVar(&walletFlag, "wallet", "soft", "Wallet type (soft|nano)")

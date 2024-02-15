@@ -38,7 +38,7 @@ type GasTable struct {
 
 // Variables containing gas prices for different phases.
 var (
-	ThetaGasTable = GasTable{
+	ScriptGasTable = GasTable{
 		ExtcodeSize: 700,
 		ExtcodeCopy: 700,
 		ExtcodeHash: 400,

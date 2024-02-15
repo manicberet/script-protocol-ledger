@@ -6,18 +6,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/thetatoken/theta/crypto/bls"
+	"github.com/scripttoken/script/crypto/bls"
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database/backend"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database/backend"
 )
 
 func TestLedgerSetup(t *testing.T) {
@@ -39,6 +39,10 @@ func TestLedgerScreenTx(t *testing.T) {
 	_, res := ledger.ScreenTx(sendTxBytes)
 	assert.True(res.IsOK(), res.Message)
 
+	edgeStakeTxBytes := newRawEdgeStakeTx(chainID, 1, true, accOut, accIns[0], false)
+	_, res = ledger.ScreenTx(edgeStakeTxBytes)
+	assert.True(res.IsOK(), res.Message)
+
 	coinbaseTxBytes := newRawCoinbaseTx(chainID, ledger, 1)
 	_, res = ledger.ScreenTx(coinbaseTxBytes)
 	assert.Equal(result.CodeUnauthorizedTx, res.Code, res.Message)
@@ -54,12 +58,17 @@ func TestLedgerProposerBlockTxs(t *testing.T) {
 	// Insert send transactions into the mempool
 	numMempoolTxs := 2 * core.MaxNumRegularTxsPerBlock
 	rawSendTxs := []common.Bytes{}
+	rawEdgeStakeTxs := []common.Bytes{}
 	for idx := 0; idx < numMempoolTxs; idx++ {
 		sequence := 1
 		sendTxBytes := newRawSendTx(chainID, sequence, true, accOut, accIns[idx], true)
 		err := mempool.InsertTransaction(sendTxBytes)
 		assert.Nil(err, fmt.Sprintf("Mempool insertion error: %v", err))
 		rawSendTxs = append(rawSendTxs, sendTxBytes)
+		edgeStakeTxBytes := newRawEdgeStakeTx(chainID, sequence, true, accOut, accIns[idx], true)
+		err = mempool.InsertTransaction(edgeStakeTxBytes)
+		assert.Nil(err, fmt.Sprintf("Mempool insertion error: %v", err))
+		rawEdgeStakeTxs = append(rawEdgeStakeTxs, edgeStakeTxBytes)
 	}
 	assert.Equal(numMempoolTxs, mempool.Size())
 
@@ -103,6 +112,32 @@ func TestLedgerProposerBlockTxs(t *testing.T) {
 			prevSendTx = currSendTx
 		}
 	}
+
+	// Transaction sanity checks
+	var prevEdgeStakeTx *types.EdgeStakeTx
+	for idx := 0; idx < expectedTotalNumTx; idx++ {
+		rawTx := blockTxs[idx]
+		tx, err := types.TxFromBytes(rawTx)
+		assert.Nil(err)
+		switch tx.(type) {
+		// case *types.CoinbaseTx:
+		// 	assert.Equal(0, idx) // The first tx needs to be a coinbase transaction
+		// 	coinbaseTx := tx.(*types.CoinbaseTx)
+		// 	signBytes := coinbaseTx.SignBytes(chainID)
+		// 	ledger.consensus.PrivateKey().PublicKey().VerifySignature(signBytes, coinbaseTx.Proposer.Signature)
+		case *types.EdgeStakeTx:
+			assert.True(idx >= 0)
+			currEdgeStakeTx := tx.(*types.EdgeStakeTx)
+			if prevEdgeStakeTx != nil {
+				// mempool should works like a priority queue, for the same type of tx (i.e. EdgeStakeTx),
+				// those with higher fee should get reaped first
+				feeDiff := prevEdgeStakeTx.Fee.Minus(currEdgeStakeTx.Fee)
+				assert.True(feeDiff.IsNonnegative())
+				log.Infof("tx fee: %v, feeDiff: %v", currEdgeStakeTx.Fee, feeDiff)
+			}
+			prevEdgeStakeTx = currEdgeStakeTx
+		}
+	}
 }
 
 func TestLedgerApplyBlockTxs(t *testing.T) {
@@ -119,7 +154,7 @@ func TestLedgerApplyBlockTxs(t *testing.T) {
 	sendTx3Bytes := newRawSendTx(chainID, 1, true, accOut, accIns[2], false)
 	sendTx4Bytes := newRawSendTx(chainID, 1, true, accOut, accIns[3], false)
 	sendTx5Bytes := newRawSendTx(chainID, 1, true, accOut, accIns[4], false)
-	inAccInitTFuelWei := accIns[0].Balance.TFuelWei
+	inAccInitSPAYWei := accIns[0].Balance.SPAYWei
 	txFee := getMinimumTxFee()
 
 	blockRawTxs := []common.Bytes{
@@ -153,8 +188,8 @@ func TestLedgerApplyBlockTxs(t *testing.T) {
 
 	// Input account balance
 	expectedAccInBal := types.Coins{
-		ThetaWei: new(big.Int).SetInt64(899985),
-		TFuelWei: inAccInitTFuelWei.Sub(inAccInitTFuelWei, new(big.Int).SetInt64(txFee)),
+		SCPTWei: new(big.Int).SetInt64(899985),
+		SPAYWei: inAccInitSPAYWei.Sub(inAccInitSPAYWei, new(big.Int).SetInt64(txFee)),
 	}
 	for idx, _ := range accIns {
 		accInAddr := accIns[idx].Account.Address
@@ -195,8 +230,8 @@ func TestValidatorStakeUpdate(t *testing.T) {
 		Source: types.TxInput{
 			Address: depositSourcePrivAcc.Address,
 			Coins: types.Coins{
-				ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(10), core.MinValidatorStakeDeposit),
-				TFuelWei: new(big.Int).SetUint64(0),
+				SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(10), core.MinValidatorStakeDeposit),
+				SPAYWei: new(big.Int).SetUint64(0),
 			},
 			Sequence: 1,
 		},
@@ -361,8 +396,8 @@ func TestValidatorStakeUpdate(t *testing.T) {
 	log.Infof("Source account balance after %v blocks: %v", heightDelta2, balance3)
 
 	returnedCoins := balance3.Minus(balance2)
-	assert.True(returnedCoins.ThetaWei.Cmp(new(big.Int).Mul(new(big.Int).SetUint64(5), core.MinValidatorStakeDeposit)) == 0)
-	assert.True(returnedCoins.TFuelWei.Cmp(core.Zero) == 0)
+	assert.True(returnedCoins.SCPTWei.Cmp(new(big.Int).Mul(new(big.Int).SetUint64(5), core.MinValidatorStakeDeposit)) == 0)
+	assert.True(returnedCoins.SPAYWei.Cmp(core.Zero) == 0)
 	log.Infof("Returned coins: %v", returnedCoins)
 }
 
@@ -390,8 +425,8 @@ func TestGuardianStakeUpdate(t *testing.T) {
 		Source: types.TxInput{
 			Address: depositSourcePrivAcc.Address,
 			Coins: types.Coins{
-				ThetaWei: new(big.Int).Set(core.MinGuardianStakeDeposit),
-				TFuelWei: new(big.Int).SetUint64(0),
+				SCPTWei: new(big.Int).Set(core.MinGuardianStakeDeposit),
+				SPAYWei: new(big.Int).SetUint64(0),
 			},
 			Sequence: 1,
 		},
@@ -468,8 +503,8 @@ func TestGuardianStakeUpdate(t *testing.T) {
 		Source: types.TxInput{
 			Address: depositSourcePrivAcc.Address,
 			Coins: types.Coins{
-				ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(2), core.MinGuardianStakeDeposit),
-				TFuelWei: new(big.Int).SetUint64(0),
+				SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(2), core.MinGuardianStakeDeposit),
+				SPAYWei: new(big.Int).SetUint64(0),
 			},
 			Sequence: 1,
 		},
@@ -500,8 +535,8 @@ func TestGuardianStakeUpdate(t *testing.T) {
 		Source: types.TxInput{
 			Address: depositSourcePrivAcc.Address,
 			Coins: types.Coins{
-				ThetaWei: new(big.Int).Mul(new(big.Int).SetUint64(3), core.MinGuardianStakeDeposit),
-				TFuelWei: new(big.Int).SetUint64(0),
+				SCPTWei: new(big.Int).Mul(new(big.Int).SetUint64(3), core.MinGuardianStakeDeposit),
+				SPAYWei: new(big.Int).SetUint64(0),
 			},
 			Sequence: 2,
 		},
@@ -674,7 +709,7 @@ func TestGuardianStakeUpdate(t *testing.T) {
 	returnedCoins := balance3.Minus(balance2)
 	// The 1st deposit(1*minimal) was from holder to holder , 2nd deposit(2*minimal) and 3rd deposit
 	// (3*minimal)was from source to holder.
-	assert.Equal(0, returnedCoins.ThetaWei.Cmp(new(big.Int).Mul(new(big.Int).SetUint64(5), core.MinGuardianStakeDeposit)))
-	assert.True(returnedCoins.TFuelWei.Cmp(core.Zero) == 0)
+	assert.Equal(0, returnedCoins.SCPTWei.Cmp(new(big.Int).Mul(new(big.Int).SetUint64(5), core.MinGuardianStakeDeposit)))
+	assert.True(returnedCoins.SPAYWei.Cmp(core.Zero) == 0)
 	log.Infof("Returned coins: %v", returnedCoins)
 }

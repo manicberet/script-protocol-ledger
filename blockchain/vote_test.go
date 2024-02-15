@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
 )
 
 func TestVoteIndex(t *testing.T) {

@@ -9,10 +9,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store/database/backend"
 )
 
 func TestVMBasic(t *testing.T) {
@@ -95,13 +95,13 @@ func TestVMCreate(t *testing.T) {
 	assert.True(gas < math.MaxUint64)
 
 	account2 := store.GetAccount(addr)
-	assert.Equal(int64(1000), account2.Balance.ThetaWei.Int64())
-	assert.Equal(int64(2000-123), account2.Balance.TFuelWei.Int64())
+	assert.Equal(int64(1000), account2.Balance.SCPTWei.Int64())
+	assert.Equal(int64(2000-123), account2.Balance.SPAYWei.Int64())
 
 	contractAcc := store.GetAccount(contractAddress)
 	assert.NotNil(contractAcc)
-	assert.Equal(int64(0), contractAcc.Balance.ThetaWei.Int64())
-	assert.Equal(int64(123), contractAcc.Balance.TFuelWei.Int64())
+	assert.Equal(int64(0), contractAcc.Balance.SCPTWei.Int64())
+	assert.Equal(int64(123), contractAcc.Balance.SPAYWei.Int64())
 	ccode := store.GetCode(contractAddress)
 	assert.Nil(ccode)
 

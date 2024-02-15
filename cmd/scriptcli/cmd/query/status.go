@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,16 +14,16 @@ import (
 
 // statusCmd represents the account command.
 // Example:
-//		thetacli query status
+//		scriptcli query status
 var statusCmd = &cobra.Command{
 	Use:     "status",
 	Short:   "Get blockchain status",
 	Long:    `Get blockchain status.`,
-	Example: `thetacli query status`,
+	Example: `scriptcli query status`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-		res, err := client.Call("theta.GetStatus", rpc.GetStatusArgs{})
+		res, err := client.Call("script.GetStatus", rpc.GetStatusArgs{})
 		if err != nil {
 			utils.Error("Failed to get blockchain status: %v\n", err)
 		}

@@ -230,8 +230,8 @@ func TestTransferReservedFund4(t *testing.T) {
 	assert.Equal(t, totalTransferAmount, srcAcc.ReservedFunds[0].UsedFund)
 }
 
-// For the initial Mainnet release, TFuel should not inflate
-// func TestUpdateAccountTFuelReward(t *testing.T) {
+// For the initial Mainnet release, SPAY should not inflate
+// func TestUpdateAccountSPAYReward(t *testing.T) {
 // 	assert := assert.New(t)
 
 // 	var acc *Account
@@ -243,20 +243,20 @@ func TestTransferReservedFund4(t *testing.T) {
 // 		Balance:                NewCoins(1e12, 2000),
 // 	}
 
-// 	acc.UpdateAccountTFuelReward(currentBlockHeight)
-// 	assert.Equal(int64(1e12), acc.Balance.ThetaWei.Int64())
-// 	assert.Equal(int64(189812000), acc.Balance.TFuelWei.Int64())
+// 	acc.UpdateAccountSPAYReward(currentBlockHeight)
+// 	assert.Equal(int64(1e12), acc.Balance.SCPTWei.Int64())
+// 	assert.Equal(int64(189812000), acc.Balance.SPAYWei.Int64())
 // 	assert.Equal(uint64(1000), acc.LastUpdatedBlockHeight)
 
-// 	// Underflow: Should not update account if reward is less than 1 TFuel
+// 	// Underflow: Should not update account if reward is less than 1 SPAY
 // 	acc = &Account{
 // 		LastUpdatedBlockHeight: 1,
 // 		Balance:                NewCoins(1000, 2000),
 // 	}
 
-// 	acc.UpdateAccountTFuelReward(currentBlockHeight)
-// 	assert.Equal(int64(1000), acc.Balance.ThetaWei.Int64())
-// 	assert.Equal(int64(2000), acc.Balance.TFuelWei.Int64())
+// 	acc.UpdateAccountSPAYReward(currentBlockHeight)
+// 	assert.Equal(int64(1000), acc.Balance.SCPTWei.Int64())
+// 	assert.Equal(int64(2000), acc.Balance.SPAYWei.Int64())
 // 	assert.Equal(uint64(1), acc.LastUpdatedBlockHeight)
 
 // 	// Should not overflow for large span * balance
@@ -266,9 +266,9 @@ func TestTransferReservedFund4(t *testing.T) {
 // 		Balance:                NewCoins(1e12, 2000),
 // 	}
 
-// 	acc.UpdateAccountTFuelReward(currentBlockHeight)
-// 	assert.Equal(int64(1e12), acc.Balance.ThetaWei.Int64())
-// 	assert.Equal(int64(1899999812000), acc.Balance.TFuelWei.Int64())
+// 	acc.UpdateAccountSPAYReward(currentBlockHeight)
+// 	assert.Equal(int64(1e12), acc.Balance.SCPTWei.Int64())
+// 	assert.Equal(int64(1899999812000), acc.Balance.SPAYWei.Int64())
 // 	assert.Equal(uint64(1e7), acc.LastUpdatedBlockHeight)
 
 // 	// Should panic if the end balance oveflow
@@ -282,5 +282,5 @@ func TestTransferReservedFund4(t *testing.T) {
 // 			t.Errorf("The code did not panic")
 // 		}
 // 	}()
-// 	acc.UpdateAccountTFuelReward(currentBlockHeight) // Should panic
+// 	acc.UpdateAccountSPAYReward(currentBlockHeight) // Should panic
 // }

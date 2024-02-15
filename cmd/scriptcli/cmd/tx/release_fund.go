@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // releaseFundCmd represents the release fund command
 // Example:
-//		thetacli tx release --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab  --reserve_seq=8 --seq=8
+//		scriptcli tx release --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5  --reserve_seq=8 --seq=8
 var releaseFundCmd = &cobra.Command{
 	Use:     "release",
 	Short:   "Release fund",
-	Example: `thetacli tx release --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab  --reserve_seq=8 --seq=8`,
+	Example: `scriptcli tx release --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5  --reserve_seq=8 --seq=8`,
 	Run:     doReleaseFundCmd,
 }
 
@@ -36,14 +36,14 @@ func doReleaseFundCmd(cmd *cobra.Command, args []string) {
 		Sequence: uint64(seqFlag),
 	}
 
-	tfuel, ok := types.ParseCoinAmount(feeFlag)
+	spay, ok := types.ParseCoinAmount(feeFlag)
 	if !ok {
-		utils.Error("Failed to parse tfuel amount")
+		utils.Error("Failed to parse spay amount")
 	}
 	releaseFundTx := &types.ReleaseFundTx{
 		Fee: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: tfuel,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: spay,
 		},
 		Source:          input,
 		ReserveSequence: reserveSeqFlag,
@@ -63,7 +63,7 @@ func doReleaseFundCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+	res, err := client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	if err != nil {
 		utils.Error("Failed to broadcast transaction: %v\n", err)
 	}
@@ -77,7 +77,7 @@ func init() {
 	releaseFundCmd.Flags().StringVar(&chainIDFlag, "chain", "", "Chain ID")
 	releaseFundCmd.Flags().StringVar(&fromFlag, "from", "", "Reserve owner's address")
 	releaseFundCmd.Flags().Uint64Var(&seqFlag, "seq", 0, "Sequence number of the transaction")
-	releaseFundCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeTFuelWei), "Fee")
+	releaseFundCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeSPAYWei), "Fee")
 	releaseFundCmd.Flags().Uint64Var(&reserveSeqFlag, "reserve_seq", 1000, "Reserve sequence")
 	releaseFundCmd.Flags().StringVar(&walletFlag, "wallet", "soft", "Wallet type (soft|nano)")
 

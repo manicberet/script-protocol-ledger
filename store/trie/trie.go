@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -23,12 +23,12 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/metrics"
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/metrics"
+	"github.com/scripttoken/script/crypto"
 )
 
 var (

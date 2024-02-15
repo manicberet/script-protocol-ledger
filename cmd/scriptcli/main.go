@@ -1,6 +1,6 @@
 package main
 
-import "github.com/thetatoken/theta/cmd/thetacli/cmd"
+import "github.com/scripttoken/script/cmd/scriptcli/cmd"
 
 func main() {
 	cmd.Execute()

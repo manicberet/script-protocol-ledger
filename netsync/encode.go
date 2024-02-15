@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/dispatcher"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/dispatcher"
+	"github.com/scripttoken/script/rlp"
 )
 
 // type MessageIDEnum uint8

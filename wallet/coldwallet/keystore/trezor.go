@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -29,14 +29,14 @@ import (
 	"math/big"
 	"reflect"
 
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/rlp"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	tp "github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/wallet/coldwallet/keystore/trezor"
-	"github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	tp "github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/wallet/coldwallet/keystore/trezor"
+	"github.com/scripttoken/script/wallet/types"
 )
 
 const MAX_PASSPHRASE_LENGTH = 50
@@ -58,7 +58,7 @@ func NewTrezorDriver() Driver {
 }
 
 // Status implements keystore.Driver, always whether the Trezor is opened, closed
-// or whether the Theta app was not started on it.
+// or whether the Script app was not started on it.
 func (w *trezorDriver) Status() (string, error) {
 	if w.failure != nil {
 		return fmt.Sprintf("Failed: %v", w.failure), w.failure
@@ -115,7 +115,7 @@ func (w *trezorDriver) Heartbeat() error {
 }
 
 // Derive implements keystore.Driver, sending a derivation request to the Trezor
-// and returning the Theta address located on that derivation path.
+// and returning the Script address located on that derivation path.
 func (w *trezorDriver) Derive(path types.DerivationPath) (common.Address, error) {
 	return w.trezorDerive(path)
 }
@@ -131,7 +131,7 @@ func (w *trezorDriver) SignTx(path types.DerivationPath, txrlp common.Bytes) (co
 }
 
 // trezorDerive sends a derivation request to the Trezor device and returns the
-// Theta address located on that path.
+// Script address located on that path.
 func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, error) {
 	err := w.bridge.BeginSession()
 	if err != nil {
@@ -139,7 +139,7 @@ func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, er
 	}
 	defer w.bridge.EndSession()
 
-	request := &trezor.ThetaGetAddress{
+	request := &trezor.ScriptGetAddress{
 		AddressN:    derivationPath,
 		ShowDisplay: false,
 	}
@@ -152,7 +152,7 @@ func (w *trezorDriver) trezorDerive(derivationPath []uint32) (common.Address, er
 	if err != nil {
 		return common.Address{}, nil
 	}
-	resp := res.(*trezor.ThetaAddress)
+	resp := res.(*trezor.ScriptAddress)
 	addr := common.Address{}
 
 	copy(addr[:], common.Hex2Bytes(string(resp.Address)[2:]))
@@ -166,7 +166,7 @@ func (w *trezorDriver) trezorSignMsg(derivationPath []uint32, txrlp common.Bytes
 	}
 	defer w.bridge.EndSession()
 
-	request := &trezor.ThetaSignMessage{
+	request := &trezor.ScriptSignMessage{
 		AddressN: derivationPath,
 		Message:  txrlp,
 	}
@@ -179,7 +179,7 @@ func (w *trezorDriver) trezorSignMsg(derivationPath []uint32, txrlp common.Bytes
 	if err != nil {
 		return common.Address{}, nil, err
 	}
-	response := res.(*trezor.ThetaMessageSignature)
+	response := res.(*trezor.ScriptMessageSignature)
 	responseSig := response.Signature
 	if len(responseSig) != 65 {
 		return common.Address{}, nil, errors.New("Signature should be 65 bytes long")
@@ -217,7 +217,7 @@ func (w *trezorDriver) trezorSign(derivationPath []uint32, txrlp common.Bytes) (
 	data := tx.Payload
 	length := uint32(len(data))
 
-	request := &trezor.ThetaSignTx{
+	request := &trezor.ScriptSignTx{
 		AddressN: derivationPath,
 		Nonce:    new(big.Int).SetUint64(0).Bytes(),
 		GasPrice: new(big.Int).SetUint64(0).Bytes(),
@@ -243,21 +243,21 @@ func (w *trezorDriver) trezorSign(derivationPath []uint32, txrlp common.Bytes) (
 	if err != nil {
 		return common.Address{}, nil, err
 	}
-	response := res.(*trezor.ThetaTxRequest)
+	response := res.(*trezor.ScriptTxRequest)
 
 	for response.DataLength != 0 && int(response.DataLength) <= len(data) {
 		chunk := data[:response.DataLength]
 		data = data[response.DataLength:]
 
-		request := &trezor.ThetaTxAck{DataChunk: chunk}
+		request := &trezor.ScriptTxAck{DataChunk: chunk}
 		res, _, err := w.trezorExchange(request)
 		if err != nil {
 			return common.Address{}, nil, err
 		}
-		response = res.(*trezor.ThetaTxRequest)
+		response = res.(*trezor.ScriptTxRequest)
 	}
 
-	// Extract the Theta signature and do a sanity validation
+	// Extract the Script signature and do a sanity validation
 	if len(response.GetSignatureR()) == 0 || len(response.GetSignatureS()) == 0 || response.GetSignatureV() == 0 {
 		return common.Address{}, nil, errors.New("reply lacks signature")
 	}

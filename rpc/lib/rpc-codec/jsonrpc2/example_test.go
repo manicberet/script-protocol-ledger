@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"net/rpc"
 
-	"github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2"
+	"github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2"
 )
 
 // A server wishes to export an object of type ExampleSvc:

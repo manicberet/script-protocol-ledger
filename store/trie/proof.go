@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2015 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -21,10 +21,10 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database"
 )
 
 // Prove constructs a merkle proof for key. The result contains all encoded nodes

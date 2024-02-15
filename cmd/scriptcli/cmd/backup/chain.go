@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -19,19 +19,19 @@ var (
 
 // chainCmd represents the chain backup command.
 // Example:
-//		thetacli backup chain
+//		scriptcli backup chain
 var chainCmd = &cobra.Command{
 	Use:     "chain",
 	Short:   "backup chain",
 	Long:    `Backup chain.`,
-	Example: `thetacli backup chain`,
+	Example: `scriptcli backup chain`,
 	Run:     doChainCmd,
 }
 
 func doChainCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BackupChain", rpc.BackupChainArgs{Start: startFlag, End: endFlag, Config: configFlag})
+	res, err := client.Call("script.BackupChain", rpc.BackupChainArgs{Start: startFlag, End: endFlag, Config: configFlag})
 	if err != nil {
 		utils.Error("Failed to get backup chain call details: %v\n", err)
 	}

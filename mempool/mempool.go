@@ -10,14 +10,14 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/clist"
-	"github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/common/pqueue"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/consensus"
-	"github.com/thetatoken/theta/core"
-	dp "github.com/thetatoken/theta/dispatcher"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/clist"
+	"github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/common/pqueue"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/consensus"
+	"github.com/scripttoken/script/core"
+	dp "github.com/scripttoken/script/dispatcher"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "mempool"})
@@ -29,6 +29,8 @@ func (m MempoolError) Error() string {
 }
 
 const DuplicateTxError = MempoolError("Transaction already seen")
+const FastsyncSkipTxError = MempoolError("Skip tx during fastsync")
+
 const MaxMempoolTxCount int = 25600
 
 //
@@ -95,8 +97,8 @@ func (mtg *mempoolTransactionGroup) AddTx(rawTx common.Bytes, txInfo *core.TxInf
 }
 
 func (mtg *mempoolTransactionGroup) PopTx() (common.Bytes, *core.TxInfo) {
-	mptx := mtg.txs.Pop().(*mempoolTransaction)
-	return mptx.rawTransaction, mptx.txInfo
+	mspay := mtg.txs.Pop().(*mempoolTransaction)
+	return mspay.rawTransaction, mspay.txInfo
 }
 
 func (mtg *mempoolTransactionGroup) IsEmpty() bool {
@@ -108,11 +110,11 @@ func (mtg *mempoolTransactionGroup) RemoveTxs(committedRawTxMap map[string]bool)
 	elementList := mtg.txs.ElementList()
 	elemsTobeRemoved := []pqueue.Element{}
 	for _, elem := range *elementList {
-		mptx := elem.(*mempoolTransaction)
-		rawTx := mptx.rawTransaction
+		mspay := elem.(*mempoolTransaction)
+		rawTx := mspay.rawTransaction
 		if _, exists := committedRawTxMap[string(rawTx[:])]; exists {
 			elemsTobeRemoved = append(elemsTobeRemoved, elem)
-			logger.Debugf("tx to be removed: %v, txInfo: %v", hex.EncodeToString(rawTx), mptx.txInfo)
+			logger.Debugf("tx to be removed: %v, txInfo: %v", hex.EncodeToString(rawTx), mspay.txInfo)
 		}
 	}
 	for _, elem := range elemsTobeRemoved {
@@ -186,10 +188,10 @@ func (mp *Mempool) InsertTransaction(rawTx common.Bytes) error {
 		return DuplicateTxError
 	}
 
-	if mp.size >= MaxMempoolTxCount {
-		logger.Debugf("Mempool is full")
-		return errors.New("mempool is full, please submit your transaction again later")
-	}
+	// if mp.size >= MaxMempoolTxCount {
+	// 	logger.Debugf("Mempool is full")
+	// 	return errors.New("mempool is full, please submit your transaction again later")
+	// }
 
 	var txInfo *core.TxInfo
 	var checkTxRes result.Result
@@ -219,18 +221,13 @@ func (mp *Mempool) InsertTransaction(rawTx common.Bytes) error {
 		}
 		mp.candidateTxs.Push(txGroup)
 		logger.Debugf("rawTx: %v, txInfo: %v", hex.EncodeToString(rawTx), txInfo)
-	} else {
-		// Record tx during sync for gossiping purpose
-		mp.txBookeepper.record(rawTx)
+		//logger.Infof("Insert tx, tx.hash: 0x%v", getTransactionHash(rawTx))
+		mp.size++
 
-		logger.Debug("Skipping tx vefification during sync")
+		return nil
 	}
 
-	logger.Infof("Insert tx, tx.hash: 0x%v", getTransactionHash(rawTx))
-
-	mp.newTxs.PushBack(rawTx)
-	mp.size++
-	return nil
+	return FastsyncSkipTxError
 }
 
 // Start needs to be called when the Mempool starts

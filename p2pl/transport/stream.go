@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	p2pcmn "github.com/thetatoken/theta/p2pl/common"
-	buf "github.com/thetatoken/theta/p2pl/transport/buffer"
+	p2pcmn "github.com/scripttoken/script/p2pl/common"
+	buf "github.com/scripttoken/script/p2pl/transport/buffer"
 )
 
 // BufferedStream is a bidirectional I/O pipe that supports

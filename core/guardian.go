@@ -7,11 +7,11 @@ import (
 	"math/big"
 	"sort"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/crypto/bls"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/crypto/bls"
+	"github.com/scripttoken/script/rlp"
 )
 
 //
@@ -161,10 +161,10 @@ var (
 )
 
 func init() {
-	// Each stake deposit needs to be at least 10,000 Theta
-	MinGuardianStakeDeposit = new(big.Int).Mul(new(big.Int).SetUint64(10000), new(big.Int).SetUint64(1e18))
+	// Each stake deposit needs to be at least 10,000 Script
+	MinGuardianStakeDeposit = new(big.Int).Mul(new(big.Int).SetUint64(1000), new(big.Int).SetUint64(1e18))
 
-	// Lowering the guardian stake threshold to 1,000 Theta
+	// Lowering the guardian stake threshold to 1,000 Script
 	MinGuardianStakeDeposit1000 = new(big.Int).Mul(new(big.Int).SetUint64(1000), new(big.Int).SetUint64(1e18))
 
 }

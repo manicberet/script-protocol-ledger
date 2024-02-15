@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 var _ TxExecutor = (*DepositStakeExecutor)(nil)
@@ -27,7 +27,7 @@ func NewDepositStakeExecutor() *DepositStakeExecutor {
 func (exec *DepositStakeExecutor) sanityCheck(chainID string, view *st.StoreView, transaction types.Tx) result.Result {
 	// Feature block height check
 	blockHeight := view.Height() + 1 // the view points to the parent of the current block
-	if _, ok := transaction.(*types.DepositStakeTxV2); ok && blockHeight < common.HeightEnableTheta2 {
+	if _, ok := transaction.(*types.DepositStakeTxV2); ok && blockHeight < common.HeightEnableScript2 {
 		return result.Error("Feature guardian is not active yet")
 	}
 
@@ -51,8 +51,8 @@ func (exec *DepositStakeExecutor) sanityCheck(chainID string, view *st.StoreView
 	}
 
 	if !sanityCheckForFee(tx.Fee) {
-		return result.Error("Insufficient fee. Transaction fee needs to be at least %v TFuelWei",
-			types.MinimumTransactionFeeTFuelWei).WithErrorCode(result.CodeInvalidFee)
+		return result.Error("Insufficient fee. Transaction fee needs to be at least %v SPAYWei",
+			types.MinimumTransactionFeeSPAYWei).WithErrorCode(result.CodeInvalidFee)
 	}
 
 	if !(tx.Purpose == core.StakeForValidator || tx.Purpose == core.StakeForGuardian) {
@@ -66,14 +66,14 @@ func (exec *DepositStakeExecutor) sanityCheck(chainID string, view *st.StoreView
 			WithErrorCode(result.CodeInvalidStake)
 	}
 
-	if stake.TFuelWei.Cmp(types.Zero) != 0 {
-		return result.Error("TFuel has to be zero for stake deposit!").
+	if stake.SPAYWei.Cmp(types.Zero) != 0 {
+		return result.Error("SPAY has to be zero for stake deposit!").
 			WithErrorCode(result.CodeInvalidStake)
 	}
 
 	// Minimum stake deposit requirement to avoid spamming
-	if tx.Purpose == core.StakeForValidator && stake.ThetaWei.Cmp(core.MinValidatorStakeDeposit) < 0 {
-		return result.Error("Insufficient amount of stake, at least %v ThetaWei is required for each validator deposit", core.MinValidatorStakeDeposit).
+	if tx.Purpose == core.StakeForValidator && stake.SCPTWei.Cmp(core.MinValidatorStakeDeposit) < 0 {
+		return result.Error("Insufficient amount of stake, at least %v SCPTWei is required for each validator deposit", core.MinValidatorStakeDeposit).
 			WithErrorCode(result.CodeInsufficientStake)
 	}
 
@@ -82,8 +82,8 @@ func (exec *DepositStakeExecutor) sanityCheck(chainID string, view *st.StoreView
 		if blockHeight >= common.HeightLowerGNStakeThresholdTo1000 {
 			minGuardianStake = core.MinGuardianStakeDeposit1000
 		}
-		if stake.ThetaWei.Cmp(minGuardianStake) < 0 {
-			return result.Error("Insufficient amount of stake, at least %v ThetaWei is required for each guardian deposit", minGuardianStake).
+		if stake.SCPTWei.Cmp(minGuardianStake) < 0 {
+			return result.Error("Insufficient amount of stake, at least %v SCPTWei is required for each guardian deposit", minGuardianStake).
 				WithErrorCode(result.CodeInsufficientStake)
 		}
 	}
@@ -122,7 +122,7 @@ func (exec *DepositStakeExecutor) process(chainID string, view *st.StoreView, tr
 
 	if tx.Purpose == core.StakeForValidator {
 		sourceAccount.Balance = sourceAccount.Balance.Minus(stake)
-		stakeAmount := stake.ThetaWei
+		stakeAmount := stake.SCPTWei
 		vcp := view.GetValidatorCandidatePool()
 		err := vcp.DepositStake(sourceAddress, holderAddress, stakeAmount)
 		if err != nil {
@@ -131,7 +131,7 @@ func (exec *DepositStakeExecutor) process(chainID string, view *st.StoreView, tr
 		view.UpdateValidatorCandidatePool(vcp)
 	} else if tx.Purpose == core.StakeForGuardian {
 		sourceAccount.Balance = sourceAccount.Balance.Minus(stake)
-		stakeAmount := stake.ThetaWei
+		stakeAmount := stake.SCPTWei
 		gcp := view.GetGuardianCandidatePool()
 
 		if !gcp.Contains(holderAddress) {
@@ -194,7 +194,7 @@ func (exec *DepositStakeExecutor) calculateEffectiveGasPrice(transaction types.T
 	tx := exec.castTx(transaction)
 	fee := tx.Fee
 	gas := new(big.Int).SetUint64(types.GasDepositStakeTx)
-	effectiveGasPrice := new(big.Int).Div(fee.TFuelWei, gas)
+	effectiveGasPrice := new(big.Int).Div(fee.SPAYWei, gas)
 	return effectiveGasPrice
 }
 

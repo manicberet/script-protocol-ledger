@@ -7,7 +7,7 @@ import (
 	"math/big"
 	"math/rand"
 
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/crypto"
 )
 
 type PrivAccount struct {
@@ -59,7 +59,7 @@ func RandAccounts(num int, minAmount int64, maxAmount int64) []PrivAccount {
 			PrivKey: privKey,
 			Account: Account{
 				Address:                pubKey.Address(),
-				Balance:                Coins{TFuelWei: big.NewInt(balance), ThetaWei: big.NewInt(balance)},
+				Balance:                Coins{SPAYWei: big.NewInt(balance), SCPTWei: big.NewInt(balance)},
 				LastUpdatedBlockHeight: 1,
 			},
 		}
@@ -86,7 +86,7 @@ func Accs2TxInputs(seq int, accs ...PrivAccount) []TxInput {
 	for _, acc := range accs {
 		tx := NewTxInput(
 			acc.Account.Address,
-			NewCoins(4, int64(MinimumTransactionFeeTFuelWei)),
+			NewCoins(4, int64(MinimumTransactionFeeSPAYWei)),
 			seq)
 		txs = append(txs, tx)
 	}
@@ -108,7 +108,7 @@ func Accs2TxOutputs(accs ...PrivAccount) []TxOutput {
 
 func MakeSendTx(seq int, accOut PrivAccount, accsIn ...PrivAccount) *SendTx {
 	tx := &SendTx{
-		Fee:     NewCoins(0, int64(MinimumTransactionFeeTFuelWei)),
+		Fee:     NewCoins(0, int64(MinimumTransactionFeeSPAYWei)),
 		Inputs:  Accs2TxInputs(seq, accsIn...),
 		Outputs: Accs2TxOutputs(accOut),
 	}
@@ -117,6 +117,23 @@ func MakeSendTx(seq int, accOut PrivAccount, accsIn ...PrivAccount) *SendTx {
 }
 
 func SignSendTx(chainID string, tx *SendTx, accs ...PrivAccount) {
+	signBytes := tx.SignBytes(chainID)
+	for i, _ := range tx.Inputs {
+		tx.Inputs[i].Signature = accs[i].Sign(signBytes)
+	}
+}
+
+func MakeEdgeStakeTx(seq int, accOut PrivAccount, accsIn ...PrivAccount) *EdgeStakeTx {
+	tx := &EdgeStakeTx{
+		Fee:     NewCoins(0, int64(MinimumTransactionFeeSPAYWei)),
+		Inputs:  Accs2TxInputs(seq, accsIn...),
+		Outputs: Accs2TxOutputs(accOut),
+	}
+
+	return tx
+}
+
+func SignEdgeStakeTx(chainID string, tx *EdgeStakeTx, accs ...PrivAccount) {
 	signBytes := tx.SignBytes(chainID)
 	for i, _ := range tx.Inputs {
 		tx.Inputs[i].Signature = accs[i].Sign(signBytes)

@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright Tendermint
 
 package clist

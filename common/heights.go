@@ -1,19 +1,19 @@
 package common
 
-// HeightEnableValidatorReward specifies the minimal block height to enable the validtor TFUEL reward
-const HeightEnableValidatorReward uint64 = 4164982 // approximate time: 2pm January 14th, 2020 PST
+// HeightEnableValidatorReward specifies the minimal block height to enable the validtor SPAY reward
+const HeightEnableValidatorReward uint64 = 1 // approximate time: 2pm January 14th, 2020 PST
 
-// HeightEnableTheta2 specifies the minimal block height to enable the Theta2.0 feature.
-const HeightEnableTheta2 uint64 = 5877350 // approximate time: 12pm May 27th, 2020 PDT
+// HeightEnableScript2 specifies the minimal block height to enable the Script2.0 feature.
+const HeightEnableScript2 uint64 = 1 // approximate time: 12pm May 27th, 2020 PDT
 
-// HeightLowerGNStakeThresholdTo1000 specifies the minimal block height to lower the GN Stake Threshold to 1,000 THETA
-const HeightLowerGNStakeThresholdTo1000 uint64 = 8411427 // approximate time: 12pm Dec 10th, 2020 PST
+// HeightLowerGNStakeThresholdTo1000 specifies the minimal block height to lower the GN Stake Threshold to 1,000 SCRIPT
+const HeightLowerGNStakeThresholdTo1000 uint64 = 1 // approximate time: 12pm Dec 10th, 2020 PST
 
 // HeightEnableSmartContract specifies the minimal block height to eanble the Turing-complete smart contract support
-const HeightEnableSmartContract uint64 = 8411427 // approximate time: 12pm Dec 10th, 2020 PST
+const HeightEnableSmartContract uint64 = 1 // approximate time: 12pm Dec 10th, 2020 PST
 
 // HeightSampleStakingReward specifies the block heigth to enable sampling of staking reward
-const HeightSampleStakingReward uint64 = 9497418 // approximate time: 7pm Mar 10th, 2021 PST
+const HeightSampleStakingReward uint64 = 1 // approximate time: 7pm Mar 10th, 2021 PST
 
 // CheckpointInterval defines the interval between checkpoints.
 const CheckpointInterval = int64(100)

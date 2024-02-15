@@ -6,20 +6,20 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // vcpCmd represents the vcp command.
 // Example:
-//		thetacli query vcp --height=10
+//		scriptcli query vcp --height=10
 var vcpCmd = &cobra.Command{
 	Use:     "vcp",
 	Short:   "Get validator candidate pool",
-	Example: `thetacli query vcp --height=10`,
+	Example: `scriptcli query vcp --height=10`,
 	Run:     doVcpCmd,
 }
 
@@ -27,7 +27,7 @@ func doVcpCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
 	height := heightFlag
-	res, err := client.Call("theta.GetVcpByHeight", rpc.GetVcpByHeightArgs{Height: common.JSONUint64(height)})
+	res, err := client.Call("script.GetVcpByHeight", rpc.GetVcpByHeightArgs{Height: common.JSONUint64(height)})
 	if err != nil {
 		utils.Error("Failed to get validator candidate pool: %v\n", err)
 	}

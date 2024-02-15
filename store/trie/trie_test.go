@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -31,11 +31,11 @@ import (
 	"testing/quick"
 
 	"github.com/davecgh/go-spew/spew"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database"
-	dbbackend "github.com/thetatoken/theta/store/database/backend"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database"
+	dbbackend "github.com/scripttoken/script/store/database/backend"
 )
 
 func init() {

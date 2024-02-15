@@ -1,11 +1,11 @@
 package blockchain
 
 import (
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/store"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/store"
 )
 
 // txIndexKey constructs the DB key for the given transaction hash.

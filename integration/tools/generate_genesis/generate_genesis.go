@@ -13,13 +13,13 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database/backend"
-	"github.com/thetatoken/theta/store/trie"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database/backend"
+	"github.com/scripttoken/script/store/trie"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "genesis"})
@@ -37,8 +37,8 @@ type StakeDeposit struct {
 
 //
 // Example:
-// pushd $THETA_HOME/integration/privatenet/node
-// generate_genesis -chainID=privatenet -erc20snapshot=./data/genesis_theta_erc20_snapshot.json -stake_deposit=./data/genesis_stake_deposit.json -genesis=./genesis
+// pushd $SCRIPT_HOME/integration/scriptnet/node
+// generate_genesis -chainID=scriptnet -erc20snapshot=./data/genesis_script_erc20_snapshot.json -stake_deposit=./data/genesis_stake_deposit.json -genesis=./genesis
 //
 func main() {
 	chainID, erc20SnapshotJSONFilePath, stakeDepositFilePath, genesisSnapshotFilePath := parseArguments()
@@ -72,7 +72,7 @@ func main() {
 
 func parseArguments() (chainID, erc20SnapshotJSONFilePath, stakeDepositFilePath, genesisSnapshotFilePath string) {
 	chainIDPtr := flag.String("chainID", "local_chain", "the ID of the chain")
-	erc20SnapshotJSONFilePathPtr := flag.String("erc20snapshot", "./theta_erc20_snapshot.json", "the json file contain the ERC20 balance snapshot")
+	erc20SnapshotJSONFilePathPtr := flag.String("erc20snapshot", "./script_erc20_snapshot.json", "the json file contain the ERC20 balance snapshot")
 	stakeDepositFilePathPtr := flag.String("stake_deposit", "./stake_deposit.json", "the initial stake deposits")
 	genesisSnapshotFilePathPtr := flag.String("genesis", "./genesis", "the genesis snapshot")
 	flag.Parse()
@@ -113,7 +113,7 @@ func generateGenesisSnapshot(chainID, erc20SnapshotJSONFilePath, stakeDepositFil
 }
 
 func loadInitialBalances(erc20SnapshotJSONFilePath string) *state.StoreView {
-	initTFuelToThetaRatio := new(big.Int).SetUint64(5)
+	initSPAYToScriptRatio := new(big.Int).SetUint64(5)
 	sv := state.NewStoreView(0, common.Hash{}, backend.NewMemDatabase())
 
 	erc20SnapshotJSONFile, err := os.Open(erc20SnapshotJSONFilePath)
@@ -135,22 +135,22 @@ func loadInitialBalances(erc20SnapshotJSONFilePath string) *state.StoreView {
 		}
 		address := common.HexToAddress(key)
 
-		theta, success := new(big.Int).SetString(val, 10)
+		script, success := new(big.Int).SetString(val, 10)
 		if !success {
-			panic(fmt.Sprintf("Failed to parse ThetaWei amount: %v", val))
+			panic(fmt.Sprintf("Failed to parse SCPTWei amount: %v", val))
 		}
-		tfuel := new(big.Int).Mul(initTFuelToThetaRatio, theta)
+		spay := new(big.Int).Mul(initSPAYToScriptRatio, script)
 		acc := &types.Account{
 			Address:  address,
 			Root:     common.Hash{},
 			CodeHash: types.EmptyCodeHash,
 			Balance: types.Coins{
-				ThetaWei: theta,
-				TFuelWei: tfuel,
+				SCPTWei: script,
+				SPAYWei: spay,
 			},
 		}
 		sv.SetAccount(acc.Address, acc)
-		//logger.Infof("address: %v, theta: %v, tfuel: %v", strings.ToLower(address.String()), theta, tfuel)
+		//logger.Infof("address: %v, script: %v, spay: %v", strings.ToLower(address.String()), script, spay)
 	}
 
 	return sv
@@ -184,9 +184,9 @@ func performInitialStakeDeposit(stakeDepositFilePath string, genesisHeight uint6
 		if sourceAccount == nil {
 			panic(fmt.Sprintf("Failed to retrieve account for source address: %v", sourceAddress))
 		}
-		if sourceAccount.Balance.ThetaWei.Cmp(stakeAmount) < 0 {
-			panic(fmt.Sprintf("The source account %v does NOT have sufficient balance for stake deposit. ThetaWeiBalance = %v, StakeAmount = %v",
-				sourceAddress, sourceAccount.Balance.ThetaWei, stakeDeposit.Amount))
+		if sourceAccount.Balance.SCPTWei.Cmp(stakeAmount) < 0 {
+			panic(fmt.Sprintf("The source account %v does NOT have sufficient balance for stake deposit. SCPTWeiBalance = %v, StakeAmount = %v",
+				sourceAddress, sourceAccount.Balance.SCPTWei, stakeDeposit.Amount))
 		}
 		err := vcp.DepositStake(sourceAddress, holderAddress, stakeAmount)
 		if err != nil {
@@ -194,8 +194,8 @@ func performInitialStakeDeposit(stakeDepositFilePath string, genesisHeight uint6
 		}
 
 		stake := types.Coins{
-			ThetaWei: stakeAmount,
-			TFuelWei: new(big.Int).SetUint64(0),
+			SCPTWei: stakeAmount,
+			SPAYWei: new(big.Int).SetUint64(0),
 		}
 		sourceAccount.Balance = sourceAccount.Balance.Minus(stake)
 		sv.SetAccount(sourceAddress, sourceAccount)
@@ -254,8 +254,8 @@ func writeStoreView(sv *state.StoreView, needAccountStorage bool, writer *bufio.
 }
 
 func sanityChecks(sv *state.StoreView) error {
-	thetaWeiTotal := new(big.Int).SetUint64(0)
-	tfuelWeiTotal := new(big.Int).SetUint64(0)
+	SCPTWeiTotal := new(big.Int).SetUint64(0)
+	SPAYWeiTotal := new(big.Int).SetUint64(0)
 
 	vcpAnalyzed := false
 	sv.GetStore().Traverse(nil, func(key, val common.Bytes) bool {
@@ -269,7 +269,7 @@ func sanityChecks(sv *state.StoreView) error {
 				logger.Infof("--------------------------------------------------------")
 				logger.Infof("Validator Candidate: %v, totalStake  = %v", sc.Holder, sc.TotalStake())
 				for _, stake := range sc.Stakes {
-					thetaWeiTotal = new(big.Int).Add(thetaWeiTotal, stake.Amount)
+					SCPTWeiTotal = new(big.Int).Add(SCPTWeiTotal, stake.Amount)
 					logger.Infof("     Stake: source = %v, stakeAmount = %v", stake.Source, stake.Amount)
 				}
 				logger.Infof("--------------------------------------------------------")
@@ -294,12 +294,12 @@ func sanityChecks(sv *state.StoreView) error {
 				panic(fmt.Sprintf("Failed to decode Account: %v", err))
 			}
 
-			thetaWei := account.Balance.ThetaWei
-			tfuelWei := account.Balance.TFuelWei
-			thetaWeiTotal = new(big.Int).Add(thetaWeiTotal, thetaWei)
-			tfuelWeiTotal = new(big.Int).Add(tfuelWeiTotal, tfuelWei)
+			SCPTWei := account.Balance.SCPTWei
+			SPAYWei := account.Balance.SPAYWei
+			SCPTWeiTotal = new(big.Int).Add(SCPTWeiTotal, SCPTWei)
+			SPAYWeiTotal = new(big.Int).Add(SPAYWeiTotal, SPAYWei)
 
-			logger.Infof("Account: %v, ThetaWei = %v, TFuelWei = %v", account.Address, thetaWei, tfuelWei)
+			logger.Infof("Account: %v, SCPTWei = %v, SPAYWei = %v", account.Address, SCPTWei, SPAYWei)
 		}
 		return true
 	})
@@ -317,25 +317,25 @@ func sanityChecks(sv *state.StoreView) error {
 		return fmt.Errorf("VCP not detected in the genesis file")
 	}
 
-	// Check #2: Sum(ThetaWei) + Sum(Stake) == 1 * 10^9 * 10^18
+	// Check #2: Sum(SCPTWei) + Sum(Stake) == 1 * 10^9 * 10^18
 	oneBillion := new(big.Int).SetUint64(1000000000)
 	fiveBillion := new(big.Int).Mul(new(big.Int).SetUint64(5), oneBillion)
 	ten18 := new(big.Int).SetUint64(1000000000000000000)
 
-	expectedThetaWeiTotal := new(big.Int).Mul(oneBillion, ten18)
-	if expectedThetaWeiTotal.Cmp(thetaWeiTotal) != 0 {
-		return fmt.Errorf("Unmatched ThetaWei total: expected = %v, calculated = %v", expectedThetaWeiTotal, thetaWeiTotal)
+	expectedSCPTWeiTotal := new(big.Int).Mul(oneBillion, ten18)
+	if expectedSCPTWeiTotal.Cmp(SCPTWeiTotal) != 0 {
+		return fmt.Errorf("Unmatched SCPTWei total: expected = %v, calculated = %v", expectedSCPTWeiTotal, SCPTWeiTotal)
 	}
-	logger.Infof("Expected   ThetaWei total = %v", expectedThetaWeiTotal)
-	logger.Infof("Calculated ThetaWei total = %v", thetaWeiTotal)
+	logger.Infof("Expected   SCPTWei total = %v", expectedSCPTWeiTotal)
+	logger.Infof("Calculated SCPTWei total = %v", SCPTWeiTotal)
 
-	// Check #3: Sum(TFuelWei) == 5 * 10^9 * 10^18
-	expectedTFuelWeiTotal := new(big.Int).Mul(fiveBillion, ten18)
-	if expectedTFuelWeiTotal.Cmp(tfuelWeiTotal) != 0 {
-		return fmt.Errorf("Unmatched TFuelWei total: expected = %v, calculated = %v", expectedTFuelWeiTotal, tfuelWeiTotal)
+	// Check #3: Sum(SPAYWei) == 5 * 10^9 * 10^18
+	expectedSPAYWeiTotal := new(big.Int).Mul(fiveBillion, ten18)
+	if expectedSPAYWeiTotal.Cmp(SPAYWeiTotal) != 0 {
+		return fmt.Errorf("Unmatched SPAYWei total: expected = %v, calculated = %v", expectedSPAYWeiTotal, SPAYWeiTotal)
 	}
-	logger.Infof("Expected   TFuelWei total = %v", expectedTFuelWeiTotal)
-	logger.Infof("Calculated TFuelWei total = %v", tfuelWeiTotal)
+	logger.Infof("Expected   SPAYWei total = %v", expectedSPAYWeiTotal)
+	logger.Infof("Calculated SPAYWei total = %v", SPAYWeiTotal)
 
 	return nil
 }

@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
+	wtypes "github.com/scripttoken/script/wallet/types"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
-	wtypes "github.com/thetatoken/theta/wallet/types"
 
 	"github.com/ybbus/jsonrpc"
 	rpcc "github.com/ybbus/jsonrpc"
@@ -20,13 +20,13 @@ import (
 
 // sendCmd represents the send command
 // Example:
-//		thetacli tx send --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=9F1233798E905E173560071255140b4A8aBd3Ec6 --theta=10 --tfuel=9 --seq=1
-//		thetacli tx send --chain="privatenet" --path "m/44'/60'/0'/0/0" --to=9F1233798E905E173560071255140b4A8aBd3Ec6 --theta=10 --tfuel=9 --seq=1 --wallet=trezor
-//		thetacli tx send --chain="privatenet" --path "m/44'/60'/0'/0" --to=9F1233798E905E173560071255140b4A8aBd3Ec6 --theta=10 --tfuel=9 --seq=1 --wallet=nano
+//		scriptcli tx send --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --script=10 --spay=9 --seq=1
+//		scriptcli tx send --chain="scriptnet" --path "m/44'/60'/0'/0/0" --to=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --script=10 --spay=9 --seq=1 --wallet=trezor
+//		scriptcli tx send --chain="scriptnet" --path "m/44'/60'/0'/0" --to=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --script=10 --spay=9 --seq=1 --wallet=nano
 var sendCmd = &cobra.Command{
 	Use:     "send",
 	Short:   "Send tokens",
-	Example: `thetacli tx send --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=9F1233798E905E173560071255140b4A8aBd3Ec6 --theta=10 --tfuel=9 --seq=1`,
+	Example: `scriptcli tx send --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --script=10 --spay=9 --seq=1`,
 	Run:     doSendCmd,
 }
 
@@ -52,13 +52,13 @@ func doSendCmd(cmd *cobra.Command, args []string) {
 	}
 	defer wallet.Lock(fromAddress)
 
-	theta, ok := types.ParseCoinAmount(thetaAmountFlag)
+	script, ok := types.ParseCoinAmount(scriptAmountFlag)
 	if !ok {
-		utils.Error("Failed to parse theta amount")
+		utils.Error("Failed to parse script amount")
 	}
-	tfuel, ok := types.ParseCoinAmount(tfuelAmountFlag)
+	spay, ok := types.ParseCoinAmount(spayAmountFlag)
 	if !ok {
-		utils.Error("Failed to parse tfuel amount")
+		utils.Error("Failed to parse spay amount")
 	}
 	fee, ok := types.ParseCoinAmount(feeFlag)
 	if !ok {
@@ -67,22 +67,22 @@ func doSendCmd(cmd *cobra.Command, args []string) {
 	inputs := []types.TxInput{{
 		Address: fromAddress,
 		Coins: types.Coins{
-			TFuelWei: new(big.Int).Add(tfuel, fee),
-			ThetaWei: theta,
+			SPAYWei: new(big.Int).Add(spay, fee),
+			SCPTWei: script,
 		},
 		Sequence: uint64(seqFlag),
 	}}
 	outputs := []types.TxOutput{{
 		Address: common.HexToAddress(toFlag),
 		Coins: types.Coins{
-			TFuelWei: tfuel,
-			ThetaWei: theta,
+			SPAYWei: spay,
+			SCPTWei: script,
 		},
 	}}
 	sendTx := &types.SendTx{
 		Fee: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: fee,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: fee,
 		},
 		Inputs:  inputs,
 		Outputs: outputs,
@@ -104,9 +104,9 @@ func doSendCmd(cmd *cobra.Command, args []string) {
 
 	var res *jsonrpc.RPCResponse
 	if asyncFlag {
-		res, err = client.Call("theta.BroadcastRawTransactionAsync", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+		res, err = client.Call("script.BroadcastRawTransactionAsync", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	} else {
-		res, err = client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+		res, err = client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	}
 
 	if err != nil {
@@ -133,9 +133,9 @@ func init() {
 	sendCmd.Flags().StringVar(&toFlag, "to", "", "Address to send to")
 	sendCmd.Flags().StringVar(&pathFlag, "path", "", "Wallet derivation path")
 	sendCmd.Flags().Uint64Var(&seqFlag, "seq", 0, "Sequence number of the transaction")
-	sendCmd.Flags().StringVar(&thetaAmountFlag, "theta", "0", "Theta amount")
-	sendCmd.Flags().StringVar(&tfuelAmountFlag, "tfuel", "0", "TFuel amount")
-	sendCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeTFuelWei), "Fee")
+	sendCmd.Flags().StringVar(&scriptAmountFlag, "script", "0", "Script amount")
+	sendCmd.Flags().StringVar(&spayAmountFlag, "spay", "0", "Script amount")
+	sendCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeSPAYWei), "Fee")
 	sendCmd.Flags().StringVar(&walletFlag, "wallet", "soft", "Wallet type (soft|nano|trezor)")
 	sendCmd.Flags().BoolVar(&asyncFlag, "async", false, "block until tx has been included in the blockchain")
 

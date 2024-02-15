@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 func TestPlainSoftWalletBasics(t *testing.T) {
@@ -183,7 +183,7 @@ func testSoftWalletMultipleKeys(t *testing.T, ksType KeystoreType) {
 }
 
 func createTempDir() string {
-	dir, err := ioutil.TempDir("", "theta-softwallet-test")
+	dir, err := ioutil.TempDir("", "script-softwallet-test")
 	if err != nil {
 		panic(err)
 	}

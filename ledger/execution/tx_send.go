@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 var _ TxExecutor = (*SendTxExecutor)(nil)
@@ -64,7 +64,7 @@ func (exec *SendTxExecutor) sanityCheck(chainID string, view *st.StoreView, tran
 		for _, outAcc := range accounts {
 			if outAcc.IsASmartContract() {
 				return result.Error(
-					fmt.Sprintf("Sending Theta/TFuel to a smart contract (%v) through a SendTx transaction is not allowed", outAcc.Address))
+					fmt.Sprintf("Sending Script/SPAY to a smart contract (%v) through a SendTx transaction is not allowed", outAcc.Address))
 			}
 		}
 	}
@@ -77,8 +77,8 @@ func (exec *SendTxExecutor) sanityCheck(chainID string, view *st.StoreView, tran
 	}
 
 	if !sanityCheckForFee(tx.Fee) {
-		return result.Error("Insufficient fee. Transaction fee needs to be at least %v TFuelWei",
-			types.MinimumTransactionFeeTFuelWei).WithErrorCode(result.CodeInvalidFee)
+		return result.Error("Insufficient fee. Transaction fee needs to be at least %v SPAYWei",
+			types.MinimumTransactionFeeSPAYWei).WithErrorCode(result.CodeInvalidFee)
 	}
 
 	outTotal := sumOutputs(tx.Outputs)
@@ -129,6 +129,6 @@ func (exec *SendTxExecutor) calculateEffectiveGasPrice(transaction types.Tx) *bi
 		gasUint64 = 2 * types.GasSendTxPerAccount // to prevent spamming with invalid transactions, e.g. empty inputs/outputs
 	}
 	gas := new(big.Int).SetUint64(gasUint64)
-	effectiveGasPrice := new(big.Int).Div(fee.TFuelWei, gas)
+	effectiveGasPrice := new(big.Int).Div(fee.SPAYWei, gas)
 	return effectiveGasPrice
 }

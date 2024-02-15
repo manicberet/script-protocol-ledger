@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database"
+	"github.com/scripttoken/script/store/treestore"
 	log "github.com/sirupsen/logrus"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database"
-	"github.com/thetatoken/theta/store/treestore"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "ledger"})
@@ -404,7 +404,7 @@ func (sv *StoreView) SubBalance(addr common.Address, amount *big.Int) {
 		panic(fmt.Sprintf("Account for %v does not exist!", addr))
 	}
 	account.Balance = account.Balance.NoNil()
-	account.Balance.TFuelWei.Sub(account.Balance.TFuelWei, amount)
+	account.Balance.SPAYWei.Sub(account.Balance.SPAYWei, amount)
 	sv.SetAccount(addr, account)
 }
 
@@ -414,21 +414,21 @@ func (sv *StoreView) AddBalance(addr common.Address, amount *big.Int) {
 	}
 	account := sv.GetOrCreateAccount(addr)
 	account.Balance = account.Balance.NoNil()
-	account.Balance.TFuelWei.Add(account.Balance.TFuelWei, amount)
+	account.Balance.SPAYWei.Add(account.Balance.SPAYWei, amount)
 	sv.SetAccount(addr, account)
 }
 
 func (sv *StoreView) GetBalance(addr common.Address) *big.Int {
-	return sv.GetOrCreateAccount(addr).Balance.TFuelWei
+	return sv.GetOrCreateAccount(addr).Balance.SPAYWei
 }
 
-// GetThetaBalance returns the ThetaWei balance of the given address
-func (sv *StoreView) GetThetaBalance(addr common.Address) *big.Int {
-	return sv.GetOrCreateAccount(addr).Balance.ThetaWei
+// GetScriptBalance returns the SCPTWei balance of the given address
+func (sv *StoreView) GetScriptBalance(addr common.Address) *big.Int {
+	return sv.GetOrCreateAccount(addr).Balance.SCPTWei
 }
 
-// GetThetaStake returns the total amount of ThetaWei the address staked to validators and/or guardians
-func (sv *StoreView) GetThetaStake(addr common.Address) *big.Int {
+// GetScriptStake returns the total amount of SCPTWei the address staked to validators and/or guardians
+func (sv *StoreView) GetScriptStake(addr common.Address) *big.Int {
 	totalStake := big.NewInt(0)
 
 	vcp := sv.GetValidatorCandidatePool()
@@ -592,7 +592,7 @@ func (sv *StoreView) Suicide(addr common.Address) bool {
 		return false
 	}
 	account.CodeHash = core.SuicidedCodeHash
-	account.Balance.TFuelWei = big.NewInt(0)
+	account.Balance.SPAYWei = big.NewInt(0)
 	sv.SetAccount(addr, account)
 	return true
 }

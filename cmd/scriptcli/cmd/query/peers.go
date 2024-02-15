@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,16 +14,16 @@ import (
 
 // peersCmd represents the peers command.
 // Example:
-//		thetacli query peers
+//		scriptcli query peers
 var peersCmd = &cobra.Command{
 	Use:     "peers",
 	Short:   "Get currently connected peers",
 	Long:    `Get currently connected peers.`,
-	Example: `thetacli query peers`,
+	Example: `scriptcli query peers`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-		res, err := client.Call("theta.GetPeers", rpc.GetStatusArgs{})
+		res, err := client.Call("script.GetPeers", rpc.GetStatusArgs{})
 		if err != nil {
 			utils.Error("Failed to get peers: %v\n", err)
 		}

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	pr "github.com/thetatoken/theta/p2p/peer"
+	pr "github.com/scripttoken/script/p2p/peer"
 )
 
 func TestPeerFailureHandling(t *testing.T) {

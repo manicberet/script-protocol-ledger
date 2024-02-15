@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -23,9 +23,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/hexutil"
-	"github.com/thetatoken/theta/common/math"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/hexutil"
+	"github.com/scripttoken/script/common/math"
 )
 
 var (

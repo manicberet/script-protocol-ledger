@@ -7,12 +7,12 @@ import (
 	"log"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/crypto/bls"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/crypto/bls"
+	"github.com/scripttoken/script/rlp"
 )
 
 /*
@@ -339,9 +339,33 @@ type SendTx struct {
 	Outputs []TxOutput `json:"outputs"`
 }
 
-func (_ *SendTx) AssertIsTx() {}
+type EdgeStakeTx struct {
+	Fee     Coins      `json:"fee"` // Fee
+	Inputs  []TxInput  `json:"inputs"`
+	Outputs []TxOutput `json:"outputs"`
+}
+
+func (_ *SendTx) AssertIsTx()          {}
+func (_ *EdgeStakeTx) AssertIsTx() {}
 
 func (tx *SendTx) SignBytes(chainID string) []byte {
+	signBytes := encodeToBytes(chainID)
+	sigz := make([]*crypto.Signature, len(tx.Inputs))
+	for i := range tx.Inputs {
+		sigz[i] = tx.Inputs[i].Signature
+		tx.Inputs[i].Signature = nil
+	}
+	txBytes, _ := TxToBytes(tx)
+	signBytes = append(signBytes, txBytes...)
+	signBytes = addPrefixForSignBytes(signBytes)
+
+	for i := range tx.Inputs {
+		tx.Inputs[i].Signature = sigz[i]
+	}
+	return signBytes
+}
+
+func (tx *EdgeStakeTx) SignBytes(chainID string) []byte {
 	signBytes := encodeToBytes(chainID)
 	sigz := make([]*crypto.Signature, len(tx.Inputs))
 	for i := range tx.Inputs {
@@ -368,8 +392,22 @@ func (tx *SendTx) SetSignature(addr common.Address, sig *crypto.Signature) bool 
 	return false
 }
 
+func (tx *EdgeStakeTx) SetSignature(addr common.Address, sig *crypto.Signature) bool {
+	for i, input := range tx.Inputs {
+		if input.Address == addr {
+			tx.Inputs[i].Signature = sig
+			return true
+		}
+	}
+	return false
+}
+
 func (tx *SendTx) String() string {
 	return fmt.Sprintf("SendTx{fee: %v, %v->%v}", tx.Fee, tx.Inputs, tx.Outputs)
+}
+
+func (tx *EdgeStakeTx) String() string {
+	return fmt.Sprintf("EdgeStakeTx{fee: %v, %v->%v}", tx.Fee, tx.Inputs, tx.Outputs)
 }
 
 //-----------------------------------------------------------------------------
@@ -794,7 +832,7 @@ func (tx *SmartContractTx) SetSignature(addr common.Address, sig *crypto.Signatu
 
 func (tx *SmartContractTx) String() string {
 	return fmt.Sprintf("SmartContractTx{%v -> %v, value: %v, gas_limit: %v, gas_price: %v, data: %v}",
-		tx.From.Address.Hex(), tx.To.Address.Hex(), tx.From.Coins.TFuelWei, tx.GasLimit, tx.GasPrice, tx.Data)
+		tx.From.Address.Hex(), tx.To.Address.Hex(), tx.From.Coins.SPAYWei, tx.GasLimit, tx.GasPrice, tx.Data)
 }
 
 //-----------------------------------------------------------------------------
@@ -830,7 +868,7 @@ func (tx *DepositStakeTx) SetSignature(addr common.Address, sig *crypto.Signatur
 
 func (tx *DepositStakeTx) String() string {
 	return fmt.Sprintf("DepositStakeTx{%v -> %v, stake: %v, purpose: %v}",
-		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.ThetaWei, tx.Purpose)
+		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.SCPTWei, tx.Purpose)
 }
 
 type DepositStakeTxV2 struct {
@@ -880,7 +918,7 @@ func (tx *DepositStakeTxV2) SetSignature(addr common.Address, sig *crypto.Signat
 
 func (tx *DepositStakeTxV2) String() string {
 	return fmt.Sprintf("DepositStakeTxV2{%v -> %v, stake: %v, purpose: %v, BlsPubkey: %v, BlsPop: %v}",
-		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.ThetaWei, tx.Purpose, tx.BlsPubkey, tx.BlsPop)
+		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.SCPTWei, tx.Purpose, tx.BlsPubkey, tx.BlsPop)
 }
 
 //-----------------------------------------------------------------------------
@@ -916,7 +954,7 @@ func (tx *WithdrawStakeTx) SetSignature(addr common.Address, sig *crypto.Signatu
 
 func (tx *WithdrawStakeTx) String() string {
 	return fmt.Sprintf("DepositStakeTx{%v <- %v, stake: %v, purpose: %v}",
-		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.ThetaWei, tx.Purpose)
+		tx.Source.Address, tx.Holder.Address, tx.Source.Coins.SCPTWei, tx.Purpose)
 }
 
 // --------------- Utils --------------- //

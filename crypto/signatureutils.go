@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2017 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -24,8 +24,8 @@ import (
 	"crypto/elliptic"
 	"fmt"
 
-	"github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/crypto/secp256k1"
+	"github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/crypto/secp256k1"
 )
 
 // ecrecover returns the uncompressed public key that created the given signature.

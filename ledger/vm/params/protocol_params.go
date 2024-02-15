@@ -86,8 +86,8 @@ const (
 	Bn256PairingBaseGas     uint64 = 100000 // Base price for an elliptic curve pairing check
 	Bn256PairingPerPointGas uint64 = 80000  // Per-point price for an elliptic curve pairing check
 
-	ThetaBalanceGas uint64 = 4   // Retrieve the Theta balance for an address
-	ThetaStakeGas   uint64 = 200 // Retrieve the total amount of staked Theta for an address
+	ScriptBalanceGas uint64 = 4   // Retrieve the Script balance for an address
+	ScriptStakeGas   uint64 = 200 // Retrieve the total amount of staked Script for an address
 )
 
 var (

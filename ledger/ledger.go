@@ -7,23 +7,23 @@ import (
 	"sync"
 	"time"
 
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/kvstore"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/kvstore"
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
-	exec "github.com/thetatoken/theta/ledger/execution"
-	"github.com/thetatoken/theta/ledger/state"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
-	mp "github.com/thetatoken/theta/mempool"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
+	exec "github.com/scripttoken/script/ledger/execution"
+	"github.com/scripttoken/script/ledger/state"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
+	mp "github.com/scripttoken/script/mempool"
+	"github.com/scripttoken/script/store/database"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "ledger"})
@@ -602,8 +602,8 @@ func (ledger *Ledger) handleValidatorStakeReturn(view *st.StoreView) {
 			log.Panicf("Failed to retrieve source account for stake return: %v", sourceAddress)
 		}
 		returnedCoins := types.Coins{
-			ThetaWei: returnedStake.Amount,
-			TFuelWei: types.Zero,
+			SCPTWei: returnedStake.Amount,
+			SPAYWei: types.Zero,
 		}
 		sourceAccount.Balance = sourceAccount.Balance.Plus(returnedCoins)
 		view.SetAccount(sourceAddress, sourceAccount)
@@ -631,8 +631,8 @@ func (ledger *Ledger) handleGuardianStakeReturn(view *st.StoreView) {
 			log.Panicf("Failed to retrieve source account for stake return: %v", sourceAddress)
 		}
 		returnedCoins := types.Coins{
-			ThetaWei: returnedStake.Amount,
-			TFuelWei: types.Zero,
+			SCPTWei: returnedStake.Amount,
+			SPAYWei: types.Zero,
 		}
 		sourceAccount.Balance = sourceAccount.Balance.Plus(returnedCoins)
 		view.SetAccount(sourceAddress, sourceAccount)
@@ -670,7 +670,7 @@ func (ledger *Ledger) addCoinbaseTx(view *st.StoreView, proposer *core.Validator
 	ch := ledger.GetCurrentBlock().Height
 	guardianVotes := ledger.GetCurrentBlock().GuardianVotes
 
-	if guardianVotes != nil && ch >= common.HeightEnableTheta2 && common.IsCheckPointHeight(ch) {
+	if guardianVotes != nil && ch >= common.HeightEnableScript2 && common.IsCheckPointHeight(ch) {
 		guradianVoteBlock, err := ledger.chain.FindBlock(guardianVotes.Block)
 		if err != nil {
 			logger.Panic(err)

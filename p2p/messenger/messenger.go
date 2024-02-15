@@ -11,12 +11,12 @@ import (
 	//nat "github.com/libp2p/go-nat"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/p2p"
-	pr "github.com/thetatoken/theta/p2p/peer"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/p2p"
+	pr "github.com/scripttoken/script/p2p/peer"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "p2p"})

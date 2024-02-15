@@ -10,13 +10,13 @@ import (
 	"time"
 
 	lru "github.com/hashicorp/golang-lru"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/dispatcher"
+	rp "github.com/scripttoken/script/report"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/dispatcher"
-	rp "github.com/thetatoken/theta/report"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -752,7 +752,7 @@ func (rm *RequestManager) passReadyBlocks() {
 				// Check if block's parent has already been added to chain. If not, skip block
 				found := false
 				for _, parent := range parents {
-					if parent.Hash() == block.Parent && parent.Status.IsValid() {
+					if parent.Hash() == block.Parent {
 						found = true
 						break
 					}

@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/crypto"
-	cn "github.com/thetatoken/theta/p2p/connection"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/crypto"
+	cn "github.com/scripttoken/script/p2p/connection"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
 )
 
 func TestDefaultPeerTableAddPeer(t *testing.T) {

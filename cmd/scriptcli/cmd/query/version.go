@@ -6,23 +6,23 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // versionCmd represents the version command.
 // Example:
-//		thetacli query version
+//		scriptcli query version
 var versionCmd = &cobra.Command{
 	Use:     "version",
-	Short:   "Get the Theta version",
-	Example: `thetacli query version`,
+	Short:   "Get the Script version",
+	Example: `scriptcli query version`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-		res, err := client.Call("theta.GetVersion", rpc.GetVersionArgs{})
+		res, err := client.Call("script.GetVersion", rpc.GetVersionArgs{})
 		if err != nil {
 			utils.Error("Failed to get version: %v\n", err)
 		}

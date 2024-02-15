@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/ledger/vm/params"
+	"github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/ledger/vm/params"
 )
 
 // Config are the configuration options for the Interpreter
@@ -92,7 +92,7 @@ func NewEVMInterpreter(evm *EVM, cfg Config) *EVMInterpreter {
 		evm: evm,
 		cfg: cfg,
 		// gasTable: evm.ChainConfig().GasTable(evm.BlockNumber),
-		gasTable: params.ThetaGasTable,
+		gasTable: params.ScriptGasTable,
 	}
 }
 

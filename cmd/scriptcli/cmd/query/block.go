@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,30 +17,30 @@ import (
 
 // blockCmd represents the block command.
 // Example:
-//		thetacli query block --height=300
-//		thetacli query block --hash=0xc88485a473527c55c5ddb067b018324b7e390b188e76702bc1db74dfc2dc6d13
+//		scriptcli query block --height=300
+//		scriptcli query block --hash=0xc88485a473527c55c5ddb067b018324b7e390b188e76702bc1db74dfc2dc6d13
 //
 var blockCmd = &cobra.Command{
 	Use:     "block",
 	Short:   "Get block details",
 	Long:    `Get block details.`,
-	Example: `thetacli query block --height=300`,
+	Example: `scriptcli query block --height=300`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
 		var res *jsonrpc.RPCResponse
 		var err error
 		if len(hashFlag) != 0 {
-			res, err = client.Call("theta.GetBlock", rpc.GetBlockArgs{
+			res, err = client.Call("script.GetBlock", rpc.GetBlockArgs{
 				Hash: common.HexToHash(hashFlag),
 			})
 		} else if endFlag != 0 {
-			res, err = client.Call("theta.GetBlocksByRange", rpc.GetBlocksByRangeArgs{
+			res, err = client.Call("script.GetBlocksByRange", rpc.GetBlocksByRangeArgs{
 				Start: common.JSONUint64(startFlag),
-				End: common.JSONUint64(endFlag),
+				End:   common.JSONUint64(endFlag),
 			})
 		} else {
-			res, err = client.Call("theta.GetBlockByHeight", rpc.GetBlockByHeightArgs{
+			res, err = client.Call("script.GetBlockByHeight", rpc.GetBlockByHeightArgs{
 				Height: common.JSONUint64(heightFlag),
 			})
 		}

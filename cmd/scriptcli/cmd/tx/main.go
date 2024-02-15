@@ -6,33 +6,33 @@ import (
 
 // Common flags used in Tx sub commands.
 var (
-	chainIDFlag                  string
-	fromFlag                     string
-	toFlag                       string
-	pathFlag                     string
-	seqFlag                      uint64
-	thetaAmountFlag              string
-	tfuelAmountFlag              string
-	gasAmountFlag                uint64
-	feeFlag                      string
-	resourceIDsFlag              []string
-	resourceIDFlag               string
-	durationFlag                 uint64
-	reserveFundInTFuelFlag       string
-	reserveCollateralInTFuelFlag string
-	reserveSeqFlag               uint64
-	addressesFlag                []string
-	percentagesFlag              []string
-	valueFlag                    string
-	gasPriceFlag                 string
-	gasLimitFlag                 uint64
-	dataFlag                     string
-	walletFlag                   string
-	stakeInThetaFlag             string
-	purposeFlag                  uint8
-	sourceFlag                   string
-	holderFlag                   string
-	asyncFlag                    bool
+	chainIDFlag                 string
+	fromFlag                    string
+	toFlag                      string
+	pathFlag                    string
+	seqFlag                     uint64
+	scriptAmountFlag            string
+	spayAmountFlag              string
+	gasAmountFlag               uint64
+	feeFlag                     string
+	resourceIDsFlag             []string
+	resourceIDFlag              string
+	durationFlag                uint64
+	reserveFundInSPAYFlag       string
+	reserveCollateralInSPAYFlag string
+	reserveSeqFlag              uint64
+	addressesFlag               []string
+	percentagesFlag             []string
+	valueFlag                   string
+	gasPriceFlag                string
+	gasLimitFlag                uint64
+	dataFlag                    string
+	walletFlag                  string
+	stakeInScriptFlag           string
+	purposeFlag                 uint8
+	sourceFlag                  string
+	holderFlag                  string
+	asyncFlag                   bool
 )
 
 // TxCmd represents the Tx command
@@ -50,4 +50,5 @@ func init() {
 	TxCmd.AddCommand(smartContractCmd)
 	TxCmd.AddCommand(depositStakeCmd)
 	TxCmd.AddCommand(withdrawStakeCmd)
+	TxCmd.AddCommand(edgeStakeCmd)
 }

@@ -5,20 +5,20 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra/doc"
-	theta "github.com/thetatoken/theta/cmd/theta/cmd"
-	thetacli "github.com/thetatoken/theta/cmd/thetacli/cmd"
+	script "github.com/scripttoken/script/cmd/script/cmd"
+	scriptcli "github.com/scripttoken/script/cmd/scriptcli/cmd"
 )
 
-func generateThetaCLIDoc(filePrepender, linkHandler func(string) string) {
-	var all = thetacli.RootCmd
+func generatescriptcliDoc(filePrepender, linkHandler func(string) string) {
+	var all = scriptcli.RootCmd
 	err := doc.GenMarkdownTreeCustom(all, "./wallet/", filePrepender, linkHandler)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func generateThetaDoc(filePrepender, linkHandler func(string) string) {
-	var all = theta.RootCmd
+func generateScriptDoc(filePrepender, linkHandler func(string) string) {
+	var all = script.RootCmd
 	err := doc.GenMarkdownTreeCustom(all, "./ledger/", filePrepender, linkHandler)
 	if err != nil {
 		log.Fatal(err)
@@ -34,7 +34,7 @@ func main() {
 		return strings.ToLower(name)
 	}
 
-	generateThetaCLIDoc(filePrepender, linkHandler)
-	generateThetaDoc(filePrepender, linkHandler)
+	generatescriptcliDoc(filePrepender, linkHandler)
+	generateScriptDoc(filePrepender, linkHandler)
 	Walk()
 }

@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/thetatoken/theta/blockchain"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/blockchain"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/rlp"
 )
 
 func ExportChainBackup(chain *blockchain.Chain, startHeight, endHeight uint64, backupDir string) (actualStartHeight, actualEndHeight uint64, backupFile string, err error) {
@@ -38,7 +38,7 @@ func ExportChainBackup(chain *blockchain.Chain, startHeight, endHeight uint64, b
 	}
 
 	currentTime := time.Now().UTC()
-	filename := "theta_chain-" + strconv.FormatUint(startHeight, 10) + "-" + strconv.FormatUint(finalizedBlock.Height, 10) + "-" + currentTime.Format("2006-01-02")
+	filename := "script_chain-" + strconv.FormatUint(startHeight, 10) + "-" + strconv.FormatUint(finalizedBlock.Height, 10) + "-" + currentTime.Format("2006-01-02")
 	backupPath := path.Join(backupDir, filename)
 	file, err := os.Create(backupPath)
 	if err != nil {
@@ -59,7 +59,7 @@ func ExportChainBackup(chain *blockchain.Chain, startHeight, endHeight uint64, b
 		}
 		parentBlock, err := chain.FindBlock(finalizedBlock.Parent)
 		if err != nil {
-			filename = "theta_chain-" + strconv.FormatUint(finalizedBlock.Height, 10) + "-" + strconv.FormatUint(actualEndHeight, 10) + "-" + currentTime.Format("2006-01-02")
+			filename = "script_chain-" + strconv.FormatUint(finalizedBlock.Height, 10) + "-" + strconv.FormatUint(actualEndHeight, 10) + "-" + currentTime.Format("2006-01-02")
 			actualBackupPath := path.Join(backupDir, filename)
 			os.Rename(backupPath, actualBackupPath)
 			return finalizedBlock.Height, actualEndHeight, filename, nil

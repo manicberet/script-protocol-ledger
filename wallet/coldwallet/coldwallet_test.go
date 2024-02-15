@@ -5,7 +5,7 @@ package coldwallet
 // import (
 // 	"testing"
 
-// 	"github.com/thetatoken/theta/common"
+// 	"github.com/scripttoken/script/common"
 // )
 
 // func TestNanoLedgerSWalletBasics(t *testing.T) {

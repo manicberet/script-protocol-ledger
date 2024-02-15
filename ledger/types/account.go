@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
 )
 
 var EmptyCodeHash = common.BytesToHash(crypto.Keccak256(nil))
@@ -277,40 +277,40 @@ func (acc *Account) generateSlashIntent(reservedFund *ReservedFund, currentServi
 }
 
 func (acc *Account) UpdateToHeight(height uint64) {
-	//	acc.UpdateAccountTFuelReward(height) // Initial TFuel inflation should be zero for all accounts
+	//	acc.UpdateAccountSPAYReward(height) // Initial SPAY inflation should be zero for all accounts
 	acc.ReleaseExpiredFunds(height)
 }
 
-// func (acc *Account) UpdateAccountTFuelReward(currentBlockHeight uint64) {
+// func (acc *Account) UpdateAccountSPAYReward(currentBlockHeight uint64) {
 // 	if acc.LastUpdatedBlockHeight < 0 || acc.LastUpdatedBlockHeight > currentBlockHeight {
 // 		panic(fmt.Sprintf("Invalid LastRewardedBlockHeight: acc.LastUpdatedBlockHeight: %d, currentBlockHeight: %d", acc.LastUpdatedBlockHeight, currentBlockHeight))
 // 	}
 
-// 	totalThetaWei := acc.Balance.ThetaWei
-// 	if totalThetaWei == nil {
-// 		totalThetaWei = big.NewInt(0)
+// 	totalSCPTWei := acc.Balance.SCPTWei
+// 	if totalSCPTWei == nil {
+// 		totalSCPTWei = big.NewInt(0)
 // 	}
 // 	span := currentBlockHeight - acc.LastUpdatedBlockHeight
 
-// 	newTFuelBalance := big.NewInt(int64(span))
-// 	newTFuelBalance.Mul(newTFuelBalance, totalThetaWei)
-// 	newTFuelBalance.Mul(newTFuelBalance, big.NewInt(RegularTFuelGenerationRateNumerator))
-// 	newTFuelBalance.Div(newTFuelBalance, big.NewInt(RegularTFuelGenerationRateDenominator))
+// 	newSPAYBalance := big.NewInt(int64(span))
+// 	newSPAYBalance.Mul(newSPAYBalance, totalSCPTWei)
+// 	newSPAYBalance.Mul(newSPAYBalance, big.NewInt(RegularSPAYGenerationRateNumerator))
+// 	newSPAYBalance.Div(newSPAYBalance, big.NewInt(RegularSPAYGenerationRateDenominator))
 
-// 	if newTFuelBalance.Sign() <= 0 {
+// 	if newSPAYBalance.Sign() <= 0 {
 // 		// Underflow, no reward to add yet
 // 		return
 // 	}
 
-// 	newTFuelBalance.Add(newTFuelBalance, acc.Balance.TFuelWei)
+// 	newSPAYBalance.Add(newSPAYBalance, acc.Balance.SPAYWei)
 
-// 	if !newTFuelBalance.IsInt64() {
-// 		panic("Account TFuel balance will overflow")
+// 	if !newSPAYBalance.IsInt64() {
+// 		panic("Account SPAY balance will overflow")
 // 	}
 
 // 	newBalance := Coins{
-// 		ThetaWei: acc.Balance.ThetaWei,
-// 		TFuelWei: newTFuelBalance,
+// 		SCPTWei: acc.Balance.SCPTWei,
+// 		SPAYWei: newSPAYBalance,
 // 	}
 // 	acc.Balance = newBalance
 // 	acc.LastUpdatedBlockHeight = currentBlockHeight

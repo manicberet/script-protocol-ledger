@@ -26,8 +26,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/thetatoken/theta/common/hexutil"
-	"github.com/thetatoken/theta/crypto/sha3"
+	"github.com/scripttoken/script/common/hexutil"
+	"github.com/scripttoken/script/crypto/sha3"
 )
 
 // Lengths of hashes and addresses in bytes.

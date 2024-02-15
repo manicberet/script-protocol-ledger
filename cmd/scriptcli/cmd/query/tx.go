@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/rpc"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,16 +14,16 @@ import (
 
 // txCmd represents the query tx command.
 // Example:
-//		thetacli query tx --hash=0x2fe41732b40ca852e9c36f52b278dde78f0fe34f28f9c94083112aa6a0624b8c
+//		scriptcli query tx --hash=0x2fe41732b40ca852e9c36f52b278dde78f0fe34f28f9c94083112aa6a0624b8c
 //
 var txCmd = &cobra.Command{
 	Use:     "tx",
 	Short:   "Get transaction details",
 	Long:    `Get transaction details.`,
-	Example: `thetacli query tx --hash=0x2fe41732b40ca852e9c36f52b278dde78f0fe34f28f9c94083112aa6a0624b8c`,
+	Example: `scriptcli query tx --hash=0x2fe41732b40ca852e9c36f52b278dde78f0fe34f28f9c94083112aa6a0624b8c`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
-		res, err := client.Call("theta.GetTransaction", rpc.GetTransactionArgs{
+		res, err := client.Call("script.GetTransaction", rpc.GetTransactionArgs{
 			Hash: hashFlag,
 		})
 

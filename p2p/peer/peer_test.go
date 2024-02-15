@@ -12,12 +12,12 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/crypto"
-	cn "github.com/thetatoken/theta/p2p/connection"
-	nu "github.com/thetatoken/theta/p2p/netutil"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/crypto"
+	cn "github.com/scripttoken/script/p2p/connection"
+	nu "github.com/scripttoken/script/p2p/netutil"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
+	"github.com/scripttoken/script/rlp"
 )
 
 func TestPeerHandshakeAndCommunication(t *testing.T) {
@@ -33,8 +33,8 @@ func TestPeerHandshakeAndCommunication(t *testing.T) {
 	messagesAtoB := []string{
 		"Hi there, this is Peer A",
 		"How's everything?",
-		"The Theta blockchain is awesome!",
-		"The Theta blockchain is the only end-to-end infrastructure for decentralized video streaming and delivery that provides both technical and economic solutions...This is one of the most exciting new blockchain ventures I have heard about.",
+		"The Script blockchain is awesome!",
+		"The Script blockchain is the only end-to-end infrastructure for decentralized video streaming and delivery that provides both technical and economic solutions...This is one of the most exciting new blockchain ventures I have heard about.",
 	}
 	numMsgs := len(messagesAtoB)
 

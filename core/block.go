@@ -8,16 +8,16 @@ import (
 	"io"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/crypto"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/trie"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/crypto"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/trie"
 )
 
 const (
 	// MaxNumRegularTxsPerBlock represents the max number of regular transaction can be inclulded in one block
-	MaxNumRegularTxsPerBlock int = 256
+	MaxNumRegularTxsPerBlock int = 8192
 )
 
 var (
@@ -126,7 +126,7 @@ type BlockHeader struct {
 	Height        uint64
 	Parent        common.Hash
 	HCC           CommitCertificate
-	GuardianVotes *AggregatedVotes `rlp:"nil"` // Added in Theta2.0 fork.
+	GuardianVotes *AggregatedVotes `rlp:"nil"` // Added in Script2.0 fork.
 	TxHash        common.Hash
 	ReceiptHash   common.Hash `json:"-"`
 	Bloom         Bloom       `json:"-"`
@@ -145,7 +145,7 @@ func (h *BlockHeader) EncodeRLP(w io.Writer) error {
 	if h == nil {
 		return rlp.Encode(w, &BlockHeader{})
 	}
-	if h.Height < common.HeightEnableTheta2 {
+	if h.Height < common.HeightEnableScript2 {
 		return rlp.Encode(w, []interface{}{
 			h.ChainID,
 			h.Epoch,
@@ -162,7 +162,7 @@ func (h *BlockHeader) EncodeRLP(w io.Writer) error {
 		})
 	}
 
-	// Theta2.0 fork
+	// Script2.0 fork
 	return rlp.Encode(w, []interface{}{
 		h.ChainID,
 		h.Epoch,
@@ -250,8 +250,8 @@ func (h *BlockHeader) DecodeRLP(stream *rlp.Stream) error {
 		return err
 	}
 
-	// Theta2.0 fork
-	if h.Height >= common.HeightEnableTheta2 {
+	// Script2.0 fork
+	if h.Height >= common.HeightEnableScript2 {
 		raw, err := stream.Raw()
 		if err != nil {
 			return err

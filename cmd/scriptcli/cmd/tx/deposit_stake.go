@@ -6,28 +6,28 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/crypto"
 
-	"github.com/thetatoken/theta/crypto/bls"
+	"github.com/scripttoken/script/crypto/bls"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // depositStakeCmd represents the deposit stake command
 // Example:
-//		thetacli tx deposit --chain="privatenet" --source=2E833968E5bB786Ae419c4d13189fB081Cc43bab --holder=2E833968E5bB786Ae419c4d13189fB081Cc43bab --stake=6000000 --purpose=0 --seq=7
+//		scriptcli tx deposit --chain="scriptnet" --source=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --holder=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --stake=6000000 --purpose=0 --seq=7
 var depositStakeCmd = &cobra.Command{
 	Use:     "deposit",
 	Short:   "Deposit stake to a validator or guardian",
-	Example: `thetacli tx deposit --chain="privatenet" --source=2E833968E5bB786Ae419c4d13189fB081Cc43bab --holder=2E833968E5bB786Ae419c4d13189fB081Cc43bab --stake=6000000 --purpose=0 --seq=7`,
+	Example: `scriptcli tx deposit --chain="scriptnet" --source=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --holder=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --stake=6000000 --purpose=0 --seq=7`,
 	Run:     doDepositStakeCmd,
 }
 
@@ -42,7 +42,7 @@ func doDepositStakeCmd(cmd *cobra.Command, args []string) {
 	if !ok {
 		utils.Error("Failed to parse fee")
 	}
-	stake, ok := types.ParseCoinAmount(stakeInThetaFlag)
+	stake, ok := types.ParseCoinAmount(stakeInScriptFlag)
 	if !ok {
 		utils.Error("Failed to parse stake")
 	}
@@ -53,16 +53,16 @@ func doDepositStakeCmd(cmd *cobra.Command, args []string) {
 	source := types.TxInput{
 		Address: sourceAddress,
 		Coins: types.Coins{
-			ThetaWei: stake,
-			TFuelWei: new(big.Int).SetUint64(0),
+			SCPTWei: stake,
+			SPAYWei: new(big.Int).SetUint64(0),
 		},
 		Sequence: uint64(seqFlag),
 	}
 
 	depositStakeTx := &types.DepositStakeTxV2{
 		Fee: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: fee,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: fee,
 		},
 		Source:  source,
 		Purpose: purposeFlag,
@@ -123,7 +123,7 @@ func doDepositStakeCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+	res, err := client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	if err != nil {
 		utils.Error("Failed to broadcast transaction: %v\n", err)
 	}
@@ -138,9 +138,9 @@ func init() {
 	depositStakeCmd.Flags().StringVar(&sourceFlag, "source", "", "Source of the stake")
 	depositStakeCmd.Flags().StringVar(&holderFlag, "holder", "", "Holder of the stake")
 	depositStakeCmd.Flags().StringVar(&pathFlag, "path", "", "Wallet derivation path")
-	depositStakeCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeTFuelWei), "Fee")
+	depositStakeCmd.Flags().StringVar(&feeFlag, "fee", fmt.Sprintf("%dwei", types.MinimumTransactionFeeSPAYWei), "Fee")
 	depositStakeCmd.Flags().Uint64Var(&seqFlag, "seq", 0, "Sequence number of the transaction")
-	depositStakeCmd.Flags().StringVar(&stakeInThetaFlag, "stake", "5000000", "Theta amount to stake")
+	depositStakeCmd.Flags().StringVar(&stakeInScriptFlag, "stake", "5000000", "Script amount to stake")
 	depositStakeCmd.Flags().Uint8Var(&purposeFlag, "purpose", 0, "Purpose of staking")
 	depositStakeCmd.Flags().StringVar(&walletFlag, "wallet", "soft", "Wallet type (soft|nano)")
 

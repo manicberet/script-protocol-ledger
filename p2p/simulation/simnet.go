@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/p2p"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/p2p"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
 )
 
 // Envelope wraps a message with network information for delivery.

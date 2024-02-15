@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/rlp"
 )
 
 const maxTxSize = 1024 * 1024
@@ -28,6 +28,7 @@ const (
 	TxCoinbase TxType = iota
 	TxSlash
 	TxSend
+	TxEdgeStake
 	TxReserveFund
 	TxReleaseFund
 	TxServicePayment
@@ -77,6 +78,10 @@ func TxFromBytes(raw []byte) (Tx, error) {
 		data := &SendTx{}
 		err = s.Decode(data)
 		return data, err
+	} else if txType == TxEdgeStake {
+		data := &EdgeStakeTx{}
+		err = s.Decode(data)
+		return data, err
 	} else if txType == TxReserveFund {
 		data := &ReserveFundTx{}
 		err = s.Decode(data)
@@ -124,6 +129,8 @@ func TxToBytes(t Tx) ([]byte, error) {
 		txType = TxSlash
 	case *SendTx:
 		txType = TxSend
+	case *EdgeStakeTx:
+		txType = TxEdgeStake
 	case *ReserveFundTx:
 		txType = TxReserveFund
 	case *ReleaseFundTx:

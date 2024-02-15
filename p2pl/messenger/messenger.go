@@ -13,16 +13,16 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/crypto"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
-	p2pcmn "github.com/thetatoken/theta/p2pl/common"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/crypto"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
+	p2pcmn "github.com/scripttoken/script/p2pl/common"
 
-	"github.com/thetatoken/theta/p2pl/peer"
+	"github.com/scripttoken/script/p2pl/peer"
 
-	"github.com/thetatoken/theta/p2pl"
-	"github.com/thetatoken/theta/p2pl/transport"
+	"github.com/scripttoken/script/p2pl"
+	"github.com/scripttoken/script/p2pl/transport"
 
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
@@ -54,7 +54,7 @@ var logger *log.Entry = log.WithFields(log.Fields{"prefix": "p2pl"})
 var _ p2pl.Network = (*Messenger)(nil)
 
 const (
-	// thetaP2PProtocolPrefix            = "/theta/1.0.0/"
+	// scriptP2PProtocolPrefix            = "/script/1.0.0/"
 	defaultPeerDiscoveryPulseInterval = 10 * time.Second
 	connectInterval                   = 1000 // 1 sec
 	lowConnectivityCheckInterval      = 60
@@ -140,7 +140,7 @@ func CreateMessenger(pubKey *crypto.PublicKey, seedPeerMultiAddresses []string,
 	if viper.GetString(common.CfgP2PProtocolPrefix) != "" {
 		protocolPrefix = viper.GetString(common.CfgP2PProtocolPrefix)
 	} else {
-		protocolPrefix = "/theta/" + viper.GetString(common.CfgGenesisChainID) + "/" + viper.GetString(common.CfgP2PVersion) + "/"
+		protocolPrefix = "/script/" + viper.GetString(common.CfgGenesisChainID) + "/" + viper.GetString(common.CfgP2PVersion) + "/"
 	}
 
 	messenger := &Messenger{

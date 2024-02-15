@@ -3,14 +3,14 @@ package backend
 import (
 	"context"
 
-	"github.com/thetatoken/theta/store"
+	"github.com/scripttoken/script/store"
 
 	"github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/mongodb/mongo-go-driver/mongo/findopt"
 	"github.com/mongodb/mongo-go-driver/mongo/updateopt"
 	log "github.com/sirupsen/logrus"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/store/database"
 )
 
 const (

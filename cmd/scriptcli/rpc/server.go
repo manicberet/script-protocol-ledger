@@ -13,18 +13,18 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/util"
-	"github.com/thetatoken/theta/rpc/lib/rpc-codec/jsonrpc2"
-	wl "github.com/thetatoken/theta/wallet"
-	wt "github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/util"
+	"github.com/scripttoken/script/rpc/lib/rpc-codec/jsonrpc2"
+	wl "github.com/scripttoken/script/wallet"
+	wt "github.com/scripttoken/script/wallet/types"
 	"golang.org/x/net/netutil"
 	"golang.org/x/net/websocket"
 )
 
 var logger *log.Entry
 
-type ThetaCliRPCService struct {
+type scriptcliRPCService struct {
 	wallet wt.Wallet
 
 	// Life cycle
@@ -34,9 +34,9 @@ type ThetaCliRPCService struct {
 	stopped bool
 }
 
-// ThetaCliRPCServer is an instance of the CLI RPC service.
-type ThetaCliRPCServer struct {
-	*ThetaCliRPCService
+// scriptcliRPCServer is an instance of the CLI RPC service.
+type ScriptcliRPCServer struct {
+	*scriptcliRPCService
 	port string
 
 	server   *http.Server
@@ -45,16 +45,16 @@ type ThetaCliRPCServer struct {
 	listener net.Listener
 }
 
-// NewThetaCliRPCServer creates a new instance of ThetaRPCServer.
-func NewThetaCliRPCServer(cfgPath, port string) (*ThetaCliRPCServer, error) {
+// NewscriptcliRPCServer creates a new instance of ScriptRPCServer.
+func NewScriptcliRPCServer(cfgPath, port string) (*ScriptcliRPCServer, error) {
 	wallet, err := wl.OpenWallet(cfgPath, wt.WalletTypeSoft, true)
 	if err != nil {
 		fmt.Printf("Failed to open wallet: %v\n", err)
 		return nil, err
 	}
 
-	t := &ThetaCliRPCServer{
-		ThetaCliRPCService: &ThetaCliRPCService{
+	t := &ScriptcliRPCServer{
+		scriptcliRPCService: &scriptcliRPCService{
 			wallet: wallet,
 			wg:     &sync.WaitGroup{},
 		},
@@ -62,7 +62,7 @@ func NewThetaCliRPCServer(cfgPath, port string) (*ThetaCliRPCServer, error) {
 	}
 
 	s := rpc.NewServer()
-	s.RegisterName("thetacli", t.ThetaCliRPCService)
+	s.RegisterName("scriptcli", t.scriptcliRPCService)
 
 	t.handler = s
 
@@ -82,7 +82,7 @@ func NewThetaCliRPCServer(cfgPath, port string) (*ThetaCliRPCServer, error) {
 }
 
 // Start creates the main goroutine.
-func (t *ThetaCliRPCServer) Start(ctx context.Context) {
+func (t *ScriptcliRPCServer) Start(ctx context.Context) {
 	c, cancel := context.WithCancel(ctx)
 	t.ctx = c
 	t.cancel = cancel
@@ -91,7 +91,7 @@ func (t *ThetaCliRPCServer) Start(ctx context.Context) {
 	go t.mainLoop()
 }
 
-func (t *ThetaCliRPCServer) mainLoop() {
+func (t *ScriptcliRPCServer) mainLoop() {
 	defer t.wg.Done()
 
 	go t.serve()
@@ -101,7 +101,7 @@ func (t *ThetaCliRPCServer) mainLoop() {
 	t.server.Shutdown(t.ctx)
 }
 
-func (t *ThetaCliRPCServer) serve() {
+func (t *ScriptcliRPCServer) serve() {
 	l, err := net.Listen("tcp", ":"+t.port)
 	if err != nil {
 		logger.WithFields(log.Fields{"error": err}).Fatal("Failed to create listener")
@@ -117,11 +117,11 @@ func (t *ThetaCliRPCServer) serve() {
 }
 
 // Stop notifies all goroutines to stop without blocking.
-func (t *ThetaCliRPCServer) Stop() {
+func (t *ScriptcliRPCServer) Stop() {
 	t.cancel()
 }
 
 // Wait blocks until all goroutines stop.
-func (t *ThetaCliRPCServer) Wait() {
+func (t *ScriptcliRPCServer) Wait() {
 	t.wg.Wait()
 }

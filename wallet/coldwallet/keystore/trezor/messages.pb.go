@@ -79,17 +79,17 @@ const (
 	MessageType_MessageType_SignIdentity          MessageType = 53
 	MessageType_MessageType_SignedIdentity        MessageType = 54
 	MessageType_MessageType_GetFeatures           MessageType = 55
-	MessageType_MessageType_ThetaGetAddress       MessageType = 56
-	MessageType_MessageType_ThetaAddress          MessageType = 57
-	MessageType_MessageType_ThetaSignTx           MessageType = 58
-	MessageType_MessageType_ThetaTxRequest        MessageType = 59
-	MessageType_MessageType_ThetaTxAck            MessageType = 60
+	MessageType_MessageType_ScriptGetAddress       MessageType = 56
+	MessageType_MessageType_ScriptAddress          MessageType = 57
+	MessageType_MessageType_ScriptSignTx           MessageType = 58
+	MessageType_MessageType_ScriptTxRequest        MessageType = 59
+	MessageType_MessageType_ScriptTxAck            MessageType = 60
 	MessageType_MessageType_GetECDHSessionKey     MessageType = 61
 	MessageType_MessageType_ECDHSessionKey        MessageType = 62
 	MessageType_MessageType_SetU2FCounter         MessageType = 63
-	MessageType_MessageType_ThetaSignMessage      MessageType = 64
-	MessageType_MessageType_ThetaVerifyMessage    MessageType = 65
-	MessageType_MessageType_ThetaMessageSignature MessageType = 66
+	MessageType_MessageType_ScriptSignMessage      MessageType = 64
+	MessageType_MessageType_ScriptVerifyMessage    MessageType = 65
+	MessageType_MessageType_ScriptMessageSignature MessageType = 66
 	MessageType_MessageType_DebugLinkDecision     MessageType = 100
 	MessageType_MessageType_DebugLinkGetState     MessageType = 101
 	MessageType_MessageType_DebugLinkState        MessageType = 102
@@ -155,17 +155,17 @@ var MessageType_name = map[int32]string{
 	53:  "MessageType_SignIdentity",
 	54:  "MessageType_SignedIdentity",
 	55:  "MessageType_GetFeatures",
-	56:  "MessageType_ThetaGetAddress",
-	57:  "MessageType_ThetaAddress",
-	58:  "MessageType_ThetaSignTx",
-	59:  "MessageType_ThetaTxRequest",
-	60:  "MessageType_ThetaTxAck",
+	56:  "MessageType_ScriptGetAddress",
+	57:  "MessageType_ScriptAddress",
+	58:  "MessageType_ScriptSignTx",
+	59:  "MessageType_ScriptTxRequest",
+	60:  "MessageType_ScriptTxAck",
 	61:  "MessageType_GetECDHSessionKey",
 	62:  "MessageType_ECDHSessionKey",
 	63:  "MessageType_SetU2FCounter",
-	64:  "MessageType_ThetaSignMessage",
-	65:  "MessageType_ThetaVerifyMessage",
-	66:  "MessageType_ThetaMessageSignature",
+	64:  "MessageType_ScriptSignMessage",
+	65:  "MessageType_ScriptVerifyMessage",
+	66:  "MessageType_ScriptMessageSignature",
 	100: "MessageType_DebugLinkDecision",
 	101: "MessageType_DebugLinkGetState",
 	102: "MessageType_DebugLinkState",
@@ -231,17 +231,17 @@ var MessageType_value = map[string]int32{
 	"MessageType_SignIdentity":          53,
 	"MessageType_SignedIdentity":        54,
 	"MessageType_GetFeatures":           55,
-	"MessageType_ThetaGetAddress":       56,
-	"MessageType_ThetaAddress":          57,
-	"MessageType_ThetaSignTx":           58,
-	"MessageType_ThetaTxRequest":        59,
-	"MessageType_ThetaTxAck":            60,
+	"MessageType_ScriptGetAddress":       56,
+	"MessageType_ScriptAddress":          57,
+	"MessageType_ScriptSignTx":           58,
+	"MessageType_ScriptTxRequest":        59,
+	"MessageType_ScriptTxAck":            60,
 	"MessageType_GetECDHSessionKey":     61,
 	"MessageType_ECDHSessionKey":        62,
 	"MessageType_SetU2FCounter":         63,
-	"MessageType_ThetaSignMessage":      64,
-	"MessageType_ThetaVerifyMessage":    65,
-	"MessageType_ThetaMessageSignature": 66,
+	"MessageType_ScriptSignMessage":      64,
+	"MessageType_ScriptVerifyMessage":    65,
+	"MessageType_ScriptMessageSignature": 66,
 	"MessageType_DebugLinkDecision":     100,
 	"MessageType_DebugLinkGetState":     101,
 	"MessageType_DebugLinkState":        102,
@@ -1433,11 +1433,11 @@ func (m *GetAddress) GetScriptType() InputScriptType {
 }
 
 //*
-// Request: Ask device for Theta address corresponding to address_n path
+// Request: Ask device for Script address corresponding to address_n path
 // @next PassphraseRequest
-// @next ThetaAddress
+// @next ScriptAddress
 // @next Failure
-type ThetaGetAddress struct {
+type ScriptGetAddress struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,packed,name=address_n,json=addressN,proto3" json:"address_n,omitempty"`
 	ShowDisplay          bool     `protobuf:"varint,2,opt,name=show_display,json=showDisplay,proto3" json:"show_display,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -1445,39 +1445,39 @@ type ThetaGetAddress struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaGetAddress) Reset()         { *m = ThetaGetAddress{} }
-func (m *ThetaGetAddress) String() string { return proto.CompactTextString(m) }
-func (*ThetaGetAddress) ProtoMessage()    {}
-func (*ThetaGetAddress) Descriptor() ([]byte, []int) {
+func (m *ScriptGetAddress) Reset()         { *m = ScriptGetAddress{} }
+func (m *ScriptGetAddress) String() string { return proto.CompactTextString(m) }
+func (*ScriptGetAddress) ProtoMessage()    {}
+func (*ScriptGetAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{22}
 }
 
-func (m *ThetaGetAddress) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaGetAddress.Unmarshal(m, b)
+func (m *ScriptGetAddress) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptGetAddress.Unmarshal(m, b)
 }
-func (m *ThetaGetAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaGetAddress.Marshal(b, m, deterministic)
+func (m *ScriptGetAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptGetAddress.Marshal(b, m, deterministic)
 }
-func (m *ThetaGetAddress) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaGetAddress.Merge(m, src)
+func (m *ScriptGetAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptGetAddress.Merge(m, src)
 }
-func (m *ThetaGetAddress) XXX_Size() int {
-	return xxx_messageInfo_ThetaGetAddress.Size(m)
+func (m *ScriptGetAddress) XXX_Size() int {
+	return xxx_messageInfo_ScriptGetAddress.Size(m)
 }
-func (m *ThetaGetAddress) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaGetAddress.DiscardUnknown(m)
+func (m *ScriptGetAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptGetAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaGetAddress proto.InternalMessageInfo
+var xxx_messageInfo_ScriptGetAddress proto.InternalMessageInfo
 
-func (m *ThetaGetAddress) GetAddressN() []uint32 {
+func (m *ScriptGetAddress) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *ThetaGetAddress) GetShowDisplay() bool {
+func (m *ScriptGetAddress) GetShowDisplay() bool {
 	if m != nil {
 		return m.ShowDisplay
 	}
@@ -1527,41 +1527,41 @@ func (m *Address) GetAddress() string {
 }
 
 //*
-// Response: Contains an Theta address derived from device private seed
-// @prev ThetaGetAddress
-type ThetaAddress struct {
+// Response: Contains an Script address derived from device private seed
+// @prev ScriptGetAddress
+type ScriptAddress struct {
 	Address              []byte   `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaAddress) Reset()         { *m = ThetaAddress{} }
-func (m *ThetaAddress) String() string { return proto.CompactTextString(m) }
-func (*ThetaAddress) ProtoMessage()    {}
-func (*ThetaAddress) Descriptor() ([]byte, []int) {
+func (m *ScriptAddress) Reset()         { *m = ScriptAddress{} }
+func (m *ScriptAddress) String() string { return proto.CompactTextString(m) }
+func (*ScriptAddress) ProtoMessage()    {}
+func (*ScriptAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{24}
 }
 
-func (m *ThetaAddress) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaAddress.Unmarshal(m, b)
+func (m *ScriptAddress) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptAddress.Unmarshal(m, b)
 }
-func (m *ThetaAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaAddress.Marshal(b, m, deterministic)
+func (m *ScriptAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptAddress.Marshal(b, m, deterministic)
 }
-func (m *ThetaAddress) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaAddress.Merge(m, src)
+func (m *ScriptAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptAddress.Merge(m, src)
 }
-func (m *ThetaAddress) XXX_Size() int {
-	return xxx_messageInfo_ThetaAddress.Size(m)
+func (m *ScriptAddress) XXX_Size() int {
+	return xxx_messageInfo_ScriptAddress.Size(m)
 }
-func (m *ThetaAddress) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaAddress.DiscardUnknown(m)
+func (m *ScriptAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaAddress proto.InternalMessageInfo
+var xxx_messageInfo_ScriptAddress proto.InternalMessageInfo
 
-func (m *ThetaAddress) GetAddress() []byte {
+func (m *ScriptAddress) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
@@ -3055,9 +3055,9 @@ func (m *TxAck) GetTx() *TransactionType {
 // Note: the first at most 1024 bytes of data MUST be transmitted as part of this message.
 // @next PassphraseRequest
 // @next PinMatrixRequest
-// @next ThetaTxRequest
+// @next ScriptTxRequest
 // @next Failure
-type ThetaSignTx struct {
+type ScriptSignTx struct {
 	AddressN         []uint32 `protobuf:"varint,1,rep,packed,name=address_n,json=addressN,proto3" json:"address_n,omitempty"`
 	Nonce            []byte   `protobuf:"bytes,2,opt,name=nonce,proto3" json:"nonce,omitempty"`
 	GasPrice         []byte   `protobuf:"bytes,3,opt,name=gas_price,json=gasPrice,proto3" json:"gas_price,omitempty"`
@@ -3072,88 +3072,88 @@ type ThetaSignTx struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaSignTx) Reset()         { *m = ThetaSignTx{} }
-func (m *ThetaSignTx) String() string { return proto.CompactTextString(m) }
-func (*ThetaSignTx) ProtoMessage()    {}
-func (*ThetaSignTx) Descriptor() ([]byte, []int) {
+func (m *ScriptSignTx) Reset()         { *m = ScriptSignTx{} }
+func (m *ScriptSignTx) String() string { return proto.CompactTextString(m) }
+func (*ScriptSignTx) ProtoMessage()    {}
+func (*ScriptSignTx) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{49}
 }
 
-func (m *ThetaSignTx) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaSignTx.Unmarshal(m, b)
+func (m *ScriptSignTx) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptSignTx.Unmarshal(m, b)
 }
-func (m *ThetaSignTx) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaSignTx.Marshal(b, m, deterministic)
+func (m *ScriptSignTx) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptSignTx.Marshal(b, m, deterministic)
 }
-func (m *ThetaSignTx) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaSignTx.Merge(m, src)
+func (m *ScriptSignTx) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptSignTx.Merge(m, src)
 }
-func (m *ThetaSignTx) XXX_Size() int {
-	return xxx_messageInfo_ThetaSignTx.Size(m)
+func (m *ScriptSignTx) XXX_Size() int {
+	return xxx_messageInfo_ScriptSignTx.Size(m)
 }
-func (m *ThetaSignTx) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaSignTx.DiscardUnknown(m)
+func (m *ScriptSignTx) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptSignTx.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaSignTx proto.InternalMessageInfo
+var xxx_messageInfo_ScriptSignTx proto.InternalMessageInfo
 
-func (m *ThetaSignTx) GetAddressN() []uint32 {
+func (m *ScriptSignTx) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetNonce() []byte {
+func (m *ScriptSignTx) GetNonce() []byte {
 	if m != nil {
 		return m.Nonce
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetGasPrice() []byte {
+func (m *ScriptSignTx) GetGasPrice() []byte {
 	if m != nil {
 		return m.GasPrice
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetGasLimit() []byte {
+func (m *ScriptSignTx) GetGasLimit() []byte {
 	if m != nil {
 		return m.GasLimit
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetTo() []byte {
+func (m *ScriptSignTx) GetTo() []byte {
 	if m != nil {
 		return m.To
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetValue() []byte {
+func (m *ScriptSignTx) GetValue() []byte {
 	if m != nil {
 		return m.Value
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetDataInitialChunk() []byte {
+func (m *ScriptSignTx) GetDataInitialChunk() []byte {
 	if m != nil {
 		return m.DataInitialChunk
 	}
 	return nil
 }
 
-func (m *ThetaSignTx) GetDataLength() uint32 {
+func (m *ScriptSignTx) GetDataLength() uint32 {
 	if m != nil {
 		return m.DataLength
 	}
 	return 0
 }
 
-// func (m *ThetaSignTx) GetChainId() uint32 {
+// func (m *ScriptSignTx) GetChainId() uint32 {
 // 	if m != nil {
 // 		return m.ChainId
 // 	}
@@ -3164,9 +3164,9 @@ func (m *ThetaSignTx) GetDataLength() uint32 {
 // Response: Device asks for more data from transaction payload, or returns the signature.
 // If data_length is set, device awaits that many more bytes of payload.
 // Otherwise, the signature_* fields contain the computed transaction signature. All three fields will be present.
-// @prev ThetaSignTx
-// @next ThetaTxAck
-type ThetaTxRequest struct {
+// @prev ScriptSignTx
+// @next ScriptTxAck
+type ScriptTxRequest struct {
 	DataLength           uint32   `protobuf:"varint,1,opt,name=data_length,json=dataLength,proto3" json:"data_length,omitempty"`
 	SignatureV           uint32   `protobuf:"varint,2,opt,name=signature_v,json=signatureV,proto3" json:"signature_v,omitempty"`
 	SignatureR           []byte   `protobuf:"bytes,3,opt,name=signature_r,json=signatureR,proto3" json:"signature_r,omitempty"`
@@ -3176,53 +3176,53 @@ type ThetaTxRequest struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaTxRequest) Reset()         { *m = ThetaTxRequest{} }
-func (m *ThetaTxRequest) String() string { return proto.CompactTextString(m) }
-func (*ThetaTxRequest) ProtoMessage()    {}
-func (*ThetaTxRequest) Descriptor() ([]byte, []int) {
+func (m *ScriptTxRequest) Reset()         { *m = ScriptTxRequest{} }
+func (m *ScriptTxRequest) String() string { return proto.CompactTextString(m) }
+func (*ScriptTxRequest) ProtoMessage()    {}
+func (*ScriptTxRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{50}
 }
 
-func (m *ThetaTxRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaTxRequest.Unmarshal(m, b)
+func (m *ScriptTxRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptTxRequest.Unmarshal(m, b)
 }
-func (m *ThetaTxRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaTxRequest.Marshal(b, m, deterministic)
+func (m *ScriptTxRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptTxRequest.Marshal(b, m, deterministic)
 }
-func (m *ThetaTxRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaTxRequest.Merge(m, src)
+func (m *ScriptTxRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptTxRequest.Merge(m, src)
 }
-func (m *ThetaTxRequest) XXX_Size() int {
-	return xxx_messageInfo_ThetaTxRequest.Size(m)
+func (m *ScriptTxRequest) XXX_Size() int {
+	return xxx_messageInfo_ScriptTxRequest.Size(m)
 }
-func (m *ThetaTxRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaTxRequest.DiscardUnknown(m)
+func (m *ScriptTxRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptTxRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaTxRequest proto.InternalMessageInfo
+var xxx_messageInfo_ScriptTxRequest proto.InternalMessageInfo
 
-func (m *ThetaTxRequest) GetDataLength() uint32 {
+func (m *ScriptTxRequest) GetDataLength() uint32 {
 	if m != nil {
 		return m.DataLength
 	}
 	return 0
 }
 
-func (m *ThetaTxRequest) GetSignatureV() uint32 {
+func (m *ScriptTxRequest) GetSignatureV() uint32 {
 	if m != nil {
 		return m.SignatureV
 	}
 	return 0
 }
 
-func (m *ThetaTxRequest) GetSignatureR() []byte {
+func (m *ScriptTxRequest) GetSignatureR() []byte {
 	if m != nil {
 		return m.SignatureR
 	}
 	return nil
 }
 
-func (m *ThetaTxRequest) GetSignatureS() []byte {
+func (m *ScriptTxRequest) GetSignatureS() []byte {
 	if m != nil {
 		return m.SignatureS
 	}
@@ -3231,41 +3231,41 @@ func (m *ThetaTxRequest) GetSignatureS() []byte {
 
 //*
 // Request: Transaction payload data.
-// @prev ThetaTxRequest
-// @next ThetaTxRequest
-type ThetaTxAck struct {
+// @prev ScriptTxRequest
+// @next ScriptTxRequest
+type ScriptTxAck struct {
 	DataChunk            []byte   `protobuf:"bytes,1,opt,name=data_chunk,json=dataChunk,proto3" json:"data_chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaTxAck) Reset()         { *m = ThetaTxAck{} }
-func (m *ThetaTxAck) String() string { return proto.CompactTextString(m) }
-func (*ThetaTxAck) ProtoMessage()    {}
-func (*ThetaTxAck) Descriptor() ([]byte, []int) {
+func (m *ScriptTxAck) Reset()         { *m = ScriptTxAck{} }
+func (m *ScriptTxAck) String() string { return proto.CompactTextString(m) }
+func (*ScriptTxAck) ProtoMessage()    {}
+func (*ScriptTxAck) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{51}
 }
 
-func (m *ThetaTxAck) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaTxAck.Unmarshal(m, b)
+func (m *ScriptTxAck) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptTxAck.Unmarshal(m, b)
 }
-func (m *ThetaTxAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaTxAck.Marshal(b, m, deterministic)
+func (m *ScriptTxAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptTxAck.Marshal(b, m, deterministic)
 }
-func (m *ThetaTxAck) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaTxAck.Merge(m, src)
+func (m *ScriptTxAck) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptTxAck.Merge(m, src)
 }
-func (m *ThetaTxAck) XXX_Size() int {
-	return xxx_messageInfo_ThetaTxAck.Size(m)
+func (m *ScriptTxAck) XXX_Size() int {
+	return xxx_messageInfo_ScriptTxAck.Size(m)
 }
-func (m *ThetaTxAck) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaTxAck.DiscardUnknown(m)
+func (m *ScriptTxAck) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptTxAck.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaTxAck proto.InternalMessageInfo
+var xxx_messageInfo_ScriptTxAck proto.InternalMessageInfo
 
-func (m *ThetaTxAck) GetDataChunk() []byte {
+func (m *ScriptTxAck) GetDataChunk() []byte {
 	if m != nil {
 		return m.DataChunk
 	}
@@ -3274,9 +3274,9 @@ func (m *ThetaTxAck) GetDataChunk() []byte {
 
 //*
 // Request: Ask device to sign message
-// @next ThetaMessageSignature
+// @next ScriptMessageSignature
 // @next Failure
-type ThetaSignMessage struct {
+type ScriptSignMessage struct {
 	AddressN             []uint32 `protobuf:"varint,1,rep,packed,name=address_n,json=addressN,proto3" json:"address_n,omitempty"`
 	Message              []byte   `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -3284,39 +3284,39 @@ type ThetaSignMessage struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaSignMessage) Reset()         { *m = ThetaSignMessage{} }
-func (m *ThetaSignMessage) String() string { return proto.CompactTextString(m) }
-func (*ThetaSignMessage) ProtoMessage()    {}
-func (*ThetaSignMessage) Descriptor() ([]byte, []int) {
+func (m *ScriptSignMessage) Reset()         { *m = ScriptSignMessage{} }
+func (m *ScriptSignMessage) String() string { return proto.CompactTextString(m) }
+func (*ScriptSignMessage) ProtoMessage()    {}
+func (*ScriptSignMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{52}
 }
 
-func (m *ThetaSignMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaSignMessage.Unmarshal(m, b)
+func (m *ScriptSignMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptSignMessage.Unmarshal(m, b)
 }
-func (m *ThetaSignMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaSignMessage.Marshal(b, m, deterministic)
+func (m *ScriptSignMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptSignMessage.Marshal(b, m, deterministic)
 }
-func (m *ThetaSignMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaSignMessage.Merge(m, src)
+func (m *ScriptSignMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptSignMessage.Merge(m, src)
 }
-func (m *ThetaSignMessage) XXX_Size() int {
-	return xxx_messageInfo_ThetaSignMessage.Size(m)
+func (m *ScriptSignMessage) XXX_Size() int {
+	return xxx_messageInfo_ScriptSignMessage.Size(m)
 }
-func (m *ThetaSignMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaSignMessage.DiscardUnknown(m)
+func (m *ScriptSignMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptSignMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaSignMessage proto.InternalMessageInfo
+var xxx_messageInfo_ScriptSignMessage proto.InternalMessageInfo
 
-func (m *ThetaSignMessage) GetAddressN() []uint32 {
+func (m *ScriptSignMessage) GetAddressN() []uint32 {
 	if m != nil {
 		return m.AddressN
 	}
 	return nil
 }
 
-func (m *ThetaSignMessage) GetMessage() []byte {
+func (m *ScriptSignMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
@@ -3327,7 +3327,7 @@ func (m *ThetaSignMessage) GetMessage() []byte {
 // Request: Ask device to verify message
 // @next Success
 // @next Failure
-type ThetaVerifyMessage struct {
+type ScriptVerifyMessage struct {
 	Address              []byte   `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	Signature            []byte   `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
 	Message              []byte   `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
@@ -3336,46 +3336,46 @@ type ThetaVerifyMessage struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaVerifyMessage) Reset()         { *m = ThetaVerifyMessage{} }
-func (m *ThetaVerifyMessage) String() string { return proto.CompactTextString(m) }
-func (*ThetaVerifyMessage) ProtoMessage()    {}
-func (*ThetaVerifyMessage) Descriptor() ([]byte, []int) {
+func (m *ScriptVerifyMessage) Reset()         { *m = ScriptVerifyMessage{} }
+func (m *ScriptVerifyMessage) String() string { return proto.CompactTextString(m) }
+func (*ScriptVerifyMessage) ProtoMessage()    {}
+func (*ScriptVerifyMessage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{53}
 }
 
-func (m *ThetaVerifyMessage) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaVerifyMessage.Unmarshal(m, b)
+func (m *ScriptVerifyMessage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptVerifyMessage.Unmarshal(m, b)
 }
-func (m *ThetaVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaVerifyMessage.Marshal(b, m, deterministic)
+func (m *ScriptVerifyMessage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptVerifyMessage.Marshal(b, m, deterministic)
 }
-func (m *ThetaVerifyMessage) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaVerifyMessage.Merge(m, src)
+func (m *ScriptVerifyMessage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptVerifyMessage.Merge(m, src)
 }
-func (m *ThetaVerifyMessage) XXX_Size() int {
-	return xxx_messageInfo_ThetaVerifyMessage.Size(m)
+func (m *ScriptVerifyMessage) XXX_Size() int {
+	return xxx_messageInfo_ScriptVerifyMessage.Size(m)
 }
-func (m *ThetaVerifyMessage) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaVerifyMessage.DiscardUnknown(m)
+func (m *ScriptVerifyMessage) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptVerifyMessage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaVerifyMessage proto.InternalMessageInfo
+var xxx_messageInfo_ScriptVerifyMessage proto.InternalMessageInfo
 
-func (m *ThetaVerifyMessage) GetAddress() []byte {
+func (m *ScriptVerifyMessage) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *ThetaVerifyMessage) GetSignature() []byte {
+func (m *ScriptVerifyMessage) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
 	return nil
 }
 
-func (m *ThetaVerifyMessage) GetMessage() []byte {
+func (m *ScriptVerifyMessage) GetMessage() []byte {
 	if m != nil {
 		return m.Message
 	}
@@ -3384,8 +3384,8 @@ func (m *ThetaVerifyMessage) GetMessage() []byte {
 
 //*
 // Response: Signed message
-// @prev ThetaSignMessage
-type ThetaMessageSignature struct {
+// @prev ScriptSignMessage
+type ScriptMessageSignature struct {
 	Address              []byte   `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
 	Signature            []byte   `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -3393,39 +3393,39 @@ type ThetaMessageSignature struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *ThetaMessageSignature) Reset()         { *m = ThetaMessageSignature{} }
-func (m *ThetaMessageSignature) String() string { return proto.CompactTextString(m) }
-func (*ThetaMessageSignature) ProtoMessage()    {}
-func (*ThetaMessageSignature) Descriptor() ([]byte, []int) {
+func (m *ScriptMessageSignature) Reset()         { *m = ScriptMessageSignature{} }
+func (m *ScriptMessageSignature) String() string { return proto.CompactTextString(m) }
+func (*ScriptMessageSignature) ProtoMessage()    {}
+func (*ScriptMessageSignature) Descriptor() ([]byte, []int) {
 	return fileDescriptor_4dc296cbfe5ffcd5, []int{54}
 }
 
-func (m *ThetaMessageSignature) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ThetaMessageSignature.Unmarshal(m, b)
+func (m *ScriptMessageSignature) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ScriptMessageSignature.Unmarshal(m, b)
 }
-func (m *ThetaMessageSignature) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ThetaMessageSignature.Marshal(b, m, deterministic)
+func (m *ScriptMessageSignature) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ScriptMessageSignature.Marshal(b, m, deterministic)
 }
-func (m *ThetaMessageSignature) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ThetaMessageSignature.Merge(m, src)
+func (m *ScriptMessageSignature) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ScriptMessageSignature.Merge(m, src)
 }
-func (m *ThetaMessageSignature) XXX_Size() int {
-	return xxx_messageInfo_ThetaMessageSignature.Size(m)
+func (m *ScriptMessageSignature) XXX_Size() int {
+	return xxx_messageInfo_ScriptMessageSignature.Size(m)
 }
-func (m *ThetaMessageSignature) XXX_DiscardUnknown() {
-	xxx_messageInfo_ThetaMessageSignature.DiscardUnknown(m)
+func (m *ScriptMessageSignature) XXX_DiscardUnknown() {
+	xxx_messageInfo_ScriptMessageSignature.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ThetaMessageSignature proto.InternalMessageInfo
+var xxx_messageInfo_ScriptMessageSignature proto.InternalMessageInfo
 
-func (m *ThetaMessageSignature) GetAddress() []byte {
+func (m *ScriptMessageSignature) GetAddress() []byte {
 	if m != nil {
 		return m.Address
 	}
 	return nil
 }
 
-func (m *ThetaMessageSignature) GetSignature() []byte {
+func (m *ScriptMessageSignature) GetSignature() []byte {
 	if m != nil {
 		return m.Signature
 	}
@@ -4384,9 +4384,9 @@ func init() {
 	proto.RegisterType((*GetPublicKey)(nil), "trezor.GetPublicKey")
 	proto.RegisterType((*PublicKey)(nil), "trezor.PublicKey")
 	proto.RegisterType((*GetAddress)(nil), "trezor.GetAddress")
-	proto.RegisterType((*ThetaGetAddress)(nil), "trezor.ThetaGetAddress")
+	proto.RegisterType((*ScriptGetAddress)(nil), "trezor.ScriptGetAddress")
 	proto.RegisterType((*Address)(nil), "trezor.Address")
-	proto.RegisterType((*ThetaAddress)(nil), "trezor.ThetaAddress")
+	proto.RegisterType((*ScriptAddress)(nil), "trezor.ScriptAddress")
 	proto.RegisterType((*WipeDevice)(nil), "trezor.WipeDevice")
 	proto.RegisterType((*LoadDevice)(nil), "trezor.LoadDevice")
 	proto.RegisterType((*ResetDevice)(nil), "trezor.ResetDevice")
@@ -4411,12 +4411,12 @@ func init() {
 	proto.RegisterType((*SimpleSignTx)(nil), "trezor.SimpleSignTx")
 	proto.RegisterType((*TxRequest)(nil), "trezor.TxRequest")
 	proto.RegisterType((*TxAck)(nil), "trezor.TxAck")
-	proto.RegisterType((*ThetaSignTx)(nil), "trezor.ThetaSignTx")
-	proto.RegisterType((*ThetaTxRequest)(nil), "trezor.ThetaTxRequest")
-	proto.RegisterType((*ThetaTxAck)(nil), "trezor.ThetaTxAck")
-	proto.RegisterType((*ThetaSignMessage)(nil), "trezor.ThetaSignMessage")
-	proto.RegisterType((*ThetaVerifyMessage)(nil), "trezor.ThetaVerifyMessage")
-	proto.RegisterType((*ThetaMessageSignature)(nil), "trezor.ThetaMessageSignature")
+	proto.RegisterType((*ScriptSignTx)(nil), "trezor.ScriptSignTx")
+	proto.RegisterType((*ScriptTxRequest)(nil), "trezor.ScriptTxRequest")
+	proto.RegisterType((*ScriptTxAck)(nil), "trezor.ScriptTxAck")
+	proto.RegisterType((*ScriptSignMessage)(nil), "trezor.ScriptSignMessage")
+	proto.RegisterType((*ScriptVerifyMessage)(nil), "trezor.ScriptVerifyMessage")
+	proto.RegisterType((*ScriptMessageSignature)(nil), "trezor.ScriptMessageSignature")
 	proto.RegisterType((*SignIdentity)(nil), "trezor.SignIdentity")
 	proto.RegisterType((*SignedIdentity)(nil), "trezor.SignedIdentity")
 	proto.RegisterType((*GetECDHSessionKey)(nil), "trezor.GetECDHSessionKey")

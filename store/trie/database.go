@@ -24,10 +24,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/metrics"
-	"github.com/thetatoken/theta/rlp"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/metrics"
+	"github.com/scripttoken/script/rlp"
+	"github.com/scripttoken/script/store/database"
 )
 
 var logger *log.Entry = log.WithFields(log.Fields{"prefix": "store"})

@@ -1,1 +1,1 @@
-A docker container to build linux binary for Theta.
+A docker container to build linux binary for Script.

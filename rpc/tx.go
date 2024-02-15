@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/hexutil"
-	"github.com/thetatoken/theta/core"
-	"github.com/thetatoken/theta/crypto"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/hexutil"
+	"github.com/scripttoken/script/core"
+	"github.com/scripttoken/script/crypto"
 )
 
 const txTimeout = 60 * time.Second
@@ -85,7 +85,7 @@ func (m *TxCallbackManager) Trim() {
 
 var txCallbackManager = NewTxCallbackManager()
 
-func (t *ThetaRPCService) txCallback() {
+func (t *ScriptRPCService) txCallback() {
 	defer t.wg.Done()
 
 	timer := time.NewTicker(1 * time.Second)
@@ -129,7 +129,7 @@ type BroadcastRawTransactionResult struct {
 	Block  *core.BlockHeader `json:"block",rlp:"nil"`
 }
 
-func (t *ThetaRPCService) BroadcastRawTransaction(
+func (t *ScriptRPCService) BroadcastRawTransaction(
 	args *BroadcastRawTransactionArgs, result *BroadcastRawTransactionResult) (err error) {
 	txBytes, err := decodeTxHexBytes(args.TxBytes)
 	if err != nil {
@@ -182,7 +182,7 @@ type BroadcastRawTransactionAsyncResult struct {
 	TxHash string `json:"hash"`
 }
 
-func (t *ThetaRPCService) BroadcastRawTransactionAsync(
+func (t *ScriptRPCService) BroadcastRawTransactionAsync(
 	args *BroadcastRawTransactionAsyncArgs, result *BroadcastRawTransactionAsyncResult) (err error) {
 	txBytes, err := decodeTxHexBytes(args.TxBytes)
 	if err != nil {

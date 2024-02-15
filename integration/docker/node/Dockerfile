@@ -4,9 +4,9 @@ COPY ./build/linux/ /bin/
 
 COPY ./integration/docker/node/start.sh /bin/
 
-RUN mkdir /theta
+RUN mkdir /script
 
-ADD ./integration /theta/integration
+ADD ./integration /script/integration
 
 VOLUME [ "/data" ]
 

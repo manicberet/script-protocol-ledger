@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/common"
-	cn "github.com/thetatoken/theta/p2p/connection"
-	"github.com/thetatoken/theta/p2p/netutil"
-	pr "github.com/thetatoken/theta/p2p/peer"
-	p2ptypes "github.com/thetatoken/theta/p2p/types"
+	"github.com/scripttoken/script/common"
+	cn "github.com/scripttoken/script/p2p/connection"
+	"github.com/scripttoken/script/p2p/netutil"
+	pr "github.com/scripttoken/script/p2p/peer"
+	p2ptypes "github.com/scripttoken/script/p2p/types"
 )
 
 //

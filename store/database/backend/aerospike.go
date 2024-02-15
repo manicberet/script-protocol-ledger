@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/aerospike/aerospike-client-go"
-	"github.com/thetatoken/theta/store"
-	"github.com/thetatoken/theta/store/database"
+	"github.com/scripttoken/script/store"
+	"github.com/scripttoken/script/store/database"
 )
 
 const (

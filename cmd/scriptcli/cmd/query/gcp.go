@@ -6,20 +6,20 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rpc"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
 
 // gcpCmd represents the gcp command.
 // Example:
-//		thetacli query gcp --height=10
+//		scriptcli query gcp --height=10
 var gcpCmd = &cobra.Command{
 	Use:     "gcp",
 	Short:   "Get guardian candidate pool",
-	Example: `thetacli query gcp --height=10`,
+	Example: `scriptcli query gcp --height=10`,
 	Run:     doGcpCmd,
 }
 
@@ -27,7 +27,7 @@ func doGcpCmd(cmd *cobra.Command, args []string) {
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
 	height := heightFlag
-	res, err := client.Call("theta.GetGcpByHeight", rpc.GetGcpByHeightArgs{Height: common.JSONUint64(height)})
+	res, err := client.Call("script.GetGcpByHeight", rpc.GetGcpByHeightArgs{Height: common.JSONUint64(height)})
 	if err != nil {
 		utils.Error("Failed to get guardian candidate pool: %v\n", err)
 	}

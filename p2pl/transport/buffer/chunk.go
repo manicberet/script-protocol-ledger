@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
-	cmn "github.com/thetatoken/theta/p2pl/common"
+	cmn "github.com/scripttoken/script/p2pl/common"
 )
 
 const (

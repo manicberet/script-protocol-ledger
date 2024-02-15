@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
-	"github.com/thetatoken/theta/wallet"
-	wtypes "github.com/thetatoken/theta/wallet/types"
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
+	"github.com/scripttoken/script/wallet"
+	wtypes "github.com/scripttoken/script/wallet/types"
 )
 
 // listCmd lists all the stored keys
@@ -14,7 +14,7 @@ var listCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "List all keys",
 	Long:    `List all keys.`,
-	Example: "thetacli key list",
+	Example: "scriptcli key list",
 	Run: func(cmd *cobra.Command, args []string) {
 		cfgPath := cmd.Flag("config").Value.String()
 		wallet, err := wallet.OpenWallet(cfgPath, wtypes.WalletTypeSoft, true)

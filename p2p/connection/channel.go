@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"github.com/thetatoken/theta/common"
+	"github.com/scripttoken/script/common"
 )
 
 //

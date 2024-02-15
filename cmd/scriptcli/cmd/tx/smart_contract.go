@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/ledger/types"
-	"github.com/thetatoken/theta/rpc"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/ledger/types"
+	"github.com/scripttoken/script/rpc"
 
+	"github.com/scripttoken/script/cmd/scriptcli/cmd/utils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/thetatoken/theta/cmd/thetacli/cmd/utils"
 
 	rpcc "github.com/ybbus/jsonrpc"
 )
@@ -21,19 +21,19 @@ import (
 // to the blockchain, which will modify the global consensus state when it is included in the blockchain
 // Examples:
 //   * Deploy a smart contract
-//		thetacli tx smart_contract --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3 --seq=1
+//		scriptcli tx smart_contract --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3 --seq=1
 //   * Call an API of a smart contract
-//		thetacli tx smart_contract --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000 --seq=2
+//		scriptcli tx smart_contract --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000 --seq=2
 
 var smartContractCmd = &cobra.Command{
 	Use:   "smart_contract",
 	Short: "Call or deploy a smart contract",
 	Example: `
 	[Deploy a smart contract] 
-	thetacli tx smart_contract --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3 --seq=1	
+	scriptcli tx smart_contract --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --value=1680 --gas_price=3 --gas_limit=50000 --data=600a600c600039600a6000f3600360135360016013f3 --seq=1	
 	
 	[Call an API of a smart contract]
-	thetacli tx smart_contract --chain="privatenet" --from=2E833968E5bB786Ae419c4d13189fB081Cc43bab --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000 --seq=2`,
+	scriptcli tx smart_contract --chain="scriptnet" --from=98fd878cd2267577ea6ac47bcb5ff4dd97d2f9e5 --to=0x7ad6cea2bc3162e30a3c98d84f821b3233c22647 --gas_price=3 --gas_limit=50000 --seq=2`,
 	Long: "smartContractCmd represents the smart_contract command. It will submit a smart contract transaction to the blockchain, which will modify the global consensus state when it is included in the blockchain",
 	Run:  doSmartContractCmd,
 }
@@ -53,8 +53,8 @@ func doSmartContractCmd(cmd *cobra.Command, args []string) {
 	from := types.TxInput{
 		Address: common.HexToAddress(fromFlag),
 		Coins: types.Coins{
-			ThetaWei: new(big.Int).SetUint64(0),
-			TFuelWei: value,
+			SCPTWei: new(big.Int).SetUint64(0),
+			SPAYWei: value,
 		},
 		Sequence: seqFlag,
 	}
@@ -95,7 +95,7 @@ func doSmartContractCmd(cmd *cobra.Command, args []string) {
 
 	client := rpcc.NewRPCClient(viper.GetString(utils.CfgRemoteRPCEndpoint))
 
-	res, err := client.Call("theta.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
+	res, err := client.Call("script.BroadcastRawTransaction", rpc.BroadcastRawTransactionArgs{TxBytes: signedTx})
 	if err != nil {
 		utils.Error("Failed to broadcast transaction: %v\n", err)
 	}

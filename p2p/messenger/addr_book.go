@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Modified for Tendermint
 // Originally Copyright (c) 2013-2014 Conformal Systems LLC.
 // https://github.com/conformal/btcd/blob/master/LICENSE
@@ -19,10 +19,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/thetatoken/theta/common"
-	mm "github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/crypto"
-	nu "github.com/thetatoken/theta/p2p/netutil"
+	"github.com/scripttoken/script/common"
+	mm "github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/crypto"
+	nu "github.com/scripttoken/script/p2p/netutil"
 )
 
 const (

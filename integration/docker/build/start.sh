@@ -7,8 +7,8 @@ set -x
 
 GOBIN=/usr/local/go/bin/go
 
-$GOBIN build -o ./build/linux/theta ./cmd/theta
-$GOBIN build -o ./build/linux/thetacli ./cmd/thetacli
+$GOBIN build -o ./build/linux/script ./cmd/script
+$GOBIN build -o ./build/linux/scriptcli ./cmd/scriptcli
 $GOBIN build -o ./build/linux/dump_storeview ./integration/tools/dump_storeview
 $GOBIN build -o ./build/linux/encrypt_sk ./integration/tools/encrypt_sk
 $GOBIN build -o ./build/linux/generate_genesis ./integration/tools/generate_genesis

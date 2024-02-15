@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/result"
-	"github.com/thetatoken/theta/core"
-	st "github.com/thetatoken/theta/ledger/state"
-	"github.com/thetatoken/theta/ledger/types"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/result"
+	"github.com/scripttoken/script/core"
+	st "github.com/scripttoken/script/ledger/state"
+	"github.com/scripttoken/script/ledger/types"
 )
 
 var _ TxExecutor = (*ReserveFundTxExecutor)(nil)
@@ -57,14 +57,14 @@ func (exec *ReserveFundTxExecutor) sanityCheck(chainID string, view *st.StoreVie
 			WithErrorCode(result.CodeReservedFundNotSpecified)
 	}
 
-	if coins.ThetaWei.Cmp(types.Zero) != 0 {
-		return result.Error("Cannot reserve Theta as service fund!").
+	if coins.SCPTWei.Cmp(types.Zero) != 0 {
+		return result.Error("Cannot reserve Script as service fund!").
 			WithErrorCode(result.CodeInvalidFundToReserve)
 	}
 
 	if !sanityCheckForFee(tx.Fee) {
-		return result.Error("Insufficient fee. Transaction fee needs to be at least %v TFuelWei",
-			types.MinimumTransactionFeeTFuelWei).WithErrorCode(result.CodeInvalidFee)
+		return result.Error("Insufficient fee. Transaction fee needs to be at least %v SPAYWei",
+			types.MinimumTransactionFeeSPAYWei).WithErrorCode(result.CodeInvalidFee)
 	}
 
 	fund := tx.Source.Coins
@@ -128,6 +128,6 @@ func (exec *ReserveFundTxExecutor) calculateEffectiveGasPrice(transaction types.
 	tx := transaction.(*types.ReserveFundTx)
 	fee := tx.Fee
 	gas := new(big.Int).SetUint64(types.GasReserveFundTx)
-	effectiveGasPrice := new(big.Int).Div(fee.TFuelWei, gas)
+	effectiveGasPrice := new(big.Int).Div(fee.SPAYWei, gas)
 	return effectiveGasPrice
 }

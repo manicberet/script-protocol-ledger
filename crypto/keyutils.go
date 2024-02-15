@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -29,10 +29,10 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/common/math"
-	"github.com/thetatoken/theta/crypto/sha3"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/common/math"
+	"github.com/scripttoken/script/crypto/sha3"
+	"github.com/scripttoken/script/rlp"
 )
 
 var (

@@ -1,4 +1,4 @@
-// Adapted for Theta
+// Adapted for Script
 // Copyright 2014 The go-ethereum Authors
 // This file is part of the go-ethereum library.
 //
@@ -22,8 +22,8 @@ import (
 	"container/heap"
 	"errors"
 
-	"github.com/thetatoken/theta/common"
-	"github.com/thetatoken/theta/rlp"
+	"github.com/scripttoken/script/common"
+	"github.com/scripttoken/script/rlp"
 )
 
 // Iterator is a key-value trie iterator that traverses a Trie.
